@@ -1,37 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fdf.h                                              :+:      :+:    :+:   */
+/*   singleton.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/18 14:04:24 by macauchy          #+#    #+#             */
-/*   Updated: 2025/03/18 14:52:33 by macauchy         ###   ########.fr       */
+/*   Created: 2025/03/18 14:48:10 by macauchy          #+#    #+#             */
+/*   Updated: 2025/03/18 14:49:13 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FDF_H
+#include "../includes/fdf.h"
 
-# define FDF_H
-
-# include "../mlx/mlx.h"
-# include "../libft/libft.h"
-
-# define WIDTH 800
-# define HEIGHT 600
-
-typedef struct s_fdf
+t_fdf	*_fdf(void)
 {
-	void	*mlx;
-	void	*win;
-}			t_fdf;
+	static t_fdf	fdf;
+	static int		init = 0;
 
-typedef struct s_point
-{
-	int		x;
-	int		y;
-}			t_point;
-
-t_fdf	*_fdf(void);
-
-#endif
+	if (!init)
+	{
+		fdf.mlx = mlx_init();
+		if (!fdf.mlx)
+		{
+			ft_putstr_fd("Error: mlx_init() failed\n", 2);
+			exit(1);
+		}
+		fdf.win = mlx_new_window(fdf.mlx, WIDTH, HEIGHT, "fdf");
+		if (!fdf.win)
+		{
+			ft_putstr_fd("Error: mlx_new_window() failed\n", 2);
+			exit(1);
+		}
+		init = 1;
+	}
+	return (&fdf);
+}
