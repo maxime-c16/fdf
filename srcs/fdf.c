@@ -6,11 +6,41 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 13:54:29 by mcauchy           #+#    #+#             */
-/*   Updated: 2025/03/18 14:58:36 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/03/19 15:33:21 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/fdf.h"
+
+/* Helper function: linear interpolation between two values */
+static double lerp(double a, double b, double t)
+{
+    return a + t * (b - a);
+}
+
+/* Helper function: interpolate between two colors (0xRRGGBB) */
+static int interpolate_color(int col1, int col2, double t)
+{
+    int r1 = (col1 >> 16) & 0xFF;
+    int g1 = (col1 >> 8) & 0xFF;
+    int b1 = col1 & 0xFF;
+    int r2 = (col2 >> 16) & 0xFF;
+    int g2 = (col2 >> 8) & 0xFF;
+    int b2 = col2 & 0xFF;
+    int r = (int)lerp(r1, r2, t);
+    int g = (int)lerp(g1, g2, t);
+    int b = (int)lerp(b1, b2, t);
+    return (r << 16) | (g << 8) | b;
+}
+
+/* 1. Linear Altitude Gradient: deep blue (min) -> fiery red (max) */
+int linear_altitude_color(int altitude, int min_alt, int max_alt)
+{
+    double t = (max_alt == min_alt) ? 0.0 : ((double)(altitude - min_alt)) / (max_alt - min_alt);
+    int start_color = 0x0000FF; // deep blue
+    int end_color = 0xFF0000;   // red
+    return interpolate_color(start_color, end_color, t);
+}
 
 void	draw_line(t_point a, t_point b)
 {
@@ -19,55 +49,99 @@ void	draw_line(t_point a, t_point b)
 	int		dy;
 	int		sx;
 	int		sy;
+	int		err;
+	int		e2;
 
 	fdf = _fdf();
 	dx = abs(b.x - a.x);
 	dy = abs(b.y - a.y);
 	sx = a.x < b.x ? 1 : -1;
 	sy = a.y < b.y ? 1 : -1;
-	if (dx > dy)
+	err = (dx > dy ? dx : -dy) / 2;
+	while (1)
 	{
-		int d = (dy << 1) - dx;
-		int d1 = dy << 1;
-		int d2 = (dy - dx) << 1;
-		mlx_pixel_put(fdf->mlx, fdf->win, a.x, a.y, 0xFFFFFF);
-		for (int x = a.x + sx, y = a.y, i = 1; i <= dx; i++, x += sx)
+		mlx_pixel_put(fdf->mlx, fdf->win, a.x, a.y, linear_altitude_color(a.z, 0, 10));
+		if (a.x == b.x && a.y == b.y)
+			break ;
+		e2 = err;
+		if (e2 > -dx)
 		{
-			if (d > 0)
-			{
-				d += d2;
-				y += sy;
-			}
-			else
-				d += d1;
-			mlx_pixel_put(fdf->mlx, fdf->win, x, y, 0xFFFFFF);
+			err -= dy;
+			a.x += sx;
 		}
-	}
-	else
-	{
-		int d = (dx << 1) - dy;
-		int d1 = dx << 1;
-		int d2 = (dx - dy) << 1;
-		mlx_pixel_put(fdf->mlx, fdf->win, a.x, a.y, 0xFFFFFF);
-		for (int x = a.x, y = a.y + sy, i = 1; i <= dy; i++, y += sy)
+		if (e2 < dy)
 		{
-			if (d > 0)
-			{
-				d += d2;
-				x += sx;
-			}
-			else
-				d += d1;
-			mlx_pixel_put(fdf->mlx, fdf->win, x, y, 0xFFFFFF);
+			err += dx;
+			a.y += sy;
 		}
+		
 	}
 }
 
-void	draw_triangle(t_point a, t_point b, t_point c)
+int	max(int a, int b)
 {
-	draw_line(a, b);
-	draw_line(b, c);
-	draw_line(c, a);
+	if (a > b)
+		return (a);
+	return (b);
+}
+
+void compute_height_factor(t_fdf *fdf)
+{
+	int min_alt;
+	int max_alt;
+	int i;
+	int	j;
+
+	i = 0;
+	min_alt = INT_MAX;
+	max_alt = INT_MIN;
+	while (i < fdf->height)
+	{
+		j = 0;
+		while (j < fdf->width)
+		{
+			if (fdf->map[i][j] < min_alt)
+				min_alt = fdf->map[i][j];
+			if (fdf->map[i][j] > max_alt)
+				max_alt = fdf->map[i][j];
+			j++;
+		}
+		i++;
+	}
+	fdf->camera.height_factor = (fdf->camera.zoom\
+			/ max(1, max_alt - min_alt)) * 5.0;
+}
+
+void	draw_map(void)
+{
+	t_fdf	*fdf;
+	int		i;
+	int		j;
+	t_point	a;
+	t_point	b;
+
+	fdf = _fdf();
+	i = 0;
+	while (i < fdf->height)
+	{
+		j = 0;
+		while (j < fdf->width)
+		{
+			a = project_point(i, j);
+			if (j + 1 < fdf->width)
+			{
+				b = project_point(i, j + 1);
+				draw_line(a, b);
+			}
+			if (i + 1 < fdf->height)
+			{
+				b = project_point(i + 1, j);
+				draw_line(a, b);
+			}
+			j++;
+		}
+		i++;
+	}
 }
 
 int	on_close(void)
@@ -75,15 +149,50 @@ int	on_close(void)
 	exit(0);
 }
 
+int	key_hook(int keycode)
+{
+	printf("keycode: %d\n", keycode);
+	if (keycode == 53)
+		exit(0);
+	if (keycode == LEFT_ARROW)
+		_fdf()->camera.x_offset -= 10;
+	if (keycode == RIGHT_ARROW)
+		_fdf()->camera.x_offset += 10;
+	if (keycode == DOWN_ARROW)
+		_fdf()->camera.y_offset += 10;
+	if (keycode == UP_ARROW)
+		_fdf()->camera.y_offset -= 10;
+	if (keycode == ADD_X_ROTATE)
+		_fdf()->camera.rotation_x += 0.1;
+	if (keycode == SUB_X_ROTATE)
+		_fdf()->camera.rotation_x -= 0.1;
+	if (keycode == ADD_Y_ROTATE)
+		_fdf()->camera.rotation_y += 0.1;
+	if (keycode == SUB_Y_ROTATE)
+		_fdf()->camera.rotation_y -= 0.1;
+	mlx_clear_window(_fdf()->mlx, _fdf()->win);
+	draw_map();
+	return (0);
+}
+
 int	main(int ac, char **av)
 {
 	t_fdf	*fdf;
 
+	if (ac != 2)
+	{
+		ft_putstr_fd("Usage: ./fdf <filename>\n", 2);
+		return (1);
+	}
+	parsing(av[1]);
 	fdf = _fdf();
-	draw_triangle((t_point){100, 100}, (t_point){200, 100}, (t_point){150, 200});
-	draw_triangle((t_point){300, 100}, (t_point){400, 100}, (t_point){350, 200});
-	draw_triangle((t_point){500, 100}, (t_point){600, 100}, (t_point){550, 200});
+	fdf->camera.zoom = 20;
+	fdf->camera.x_offset = 400;
+	fdf->camera.y_offset = 150;
+	compute_height_factor(fdf);
+	draw_map();
 	mlx_hook(fdf->win, 17, 0, on_close, 0);
+	mlx_hook(fdf->win, 2, 0, key_hook, 0);
 	mlx_loop(fdf->mlx);
 	return (0);
 }

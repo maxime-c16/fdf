@@ -5,9 +5,9 @@
       "name": "C/C++ Runner: Debug Session",
       "type": "lldb",
       "request": "launch",
-      "args": [],
-      "cwd": "/Users/maximecauchy/workflow/cursus/fdf/srcs",
-      "program": "/Users/maximecauchy/workflow/cursus/fdf/srcs/build/Debug/outDebug"
+      "args": ["test.fdf"],
+      "cwd": "/Users/maximecauchy/workflow/cursus/fdf",
+      "program": "/Users/maximecauchy/workflow/cursus/fdf/fdf"
     }
   ]
 }
