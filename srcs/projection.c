@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:15:31 by macauchy          #+#    #+#             */
-/*   Updated: 2025/03/20 14:50:24 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/03/20 15:08:41 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,8 @@ t_point	project_point(int i, int j)
 	double	z;
 
 	fdf = _fdf();
-	x = j * fdf->camera.zoom;
-	y = i * fdf->camera.zoom;
+	x = j * fdf->camera.zoom - fdf->center_x;
+	y = i * fdf->camera.zoom - fdf->center_y;
 	z = fdf->map[i][j] * fdf->camera.height_factor;
 	apply_y_rotation(&x, &z, fdf->camera.rotation_y);
 	apply_x_rotation(&y, &z, fdf->camera.rotation_x);

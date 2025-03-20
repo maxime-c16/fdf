@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 13:54:29 by mcauchy           #+#    #+#             */
-/*   Updated: 2025/03/20 14:51:08 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/03/20 15:05:05 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,9 +189,6 @@ int	main(int ac, char **av)
 	}
 	parsing(av[1]);
 	fdf = _fdf();
-	fdf->camera.zoom = 20;
-	fdf->camera.x_offset = 400;
-	fdf->camera.y_offset = 150;
 	compute_height_factor(fdf);
 	draw_map();
 	mlx_hook(fdf->win, 17, 0, on_close, 0);

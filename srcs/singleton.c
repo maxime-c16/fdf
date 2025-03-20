@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 14:48:10 by macauchy          #+#    #+#             */
-/*   Updated: 2025/03/19 11:45:17 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/03/20 15:07:37 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,9 @@ t_fdf	*_fdf(void)
 			ft_putstr_fd("Error: mlx_new_window() failed\n", 2);
 			exit(1);
 		}
+		fdf.camera.zoom = 20;
+		fdf.camera.x_offset = 400;
+		fdf.camera.y_offset = 150;
 		init = 1;
 	}
 	return (&fdf);

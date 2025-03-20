@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 14:04:24 by macauchy          #+#    #+#             */
-/*   Updated: 2025/03/20 14:56:45 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/03/20 15:06:47 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,8 @@ typedef struct s_fdf
 	int		**map;
 	int		fd;
 	int		frame_count;
+	double	center_x;
+	double	center_y;
 	t_camera	camera;
 }			t_fdf;
 
