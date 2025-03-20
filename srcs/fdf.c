@@ -6,40 +6,52 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 13:54:29 by mcauchy           #+#    #+#             */
-/*   Updated: 2025/03/20 15:05:05 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/03/20 15:54:56 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/fdf.h"
 
-/* Helper function: linear interpolation between two values */
+static double clamp(double t)
+{
+	if (t < 0.0)
+		t = 0.0;
+	if (t > 1.0)
+		t = 1.0;
+	return (t);
+}
+
 static double lerp(double a, double b, double t)
 {
-    return a + t * (b - a);
+	return (a + t * (b - a));
 }
 
-/* Helper function: interpolate between two colors (0xRRGGBB) */
 static int interpolate_color(int col1, int col2, double t)
 {
-    int r1 = (col1 >> 16) & 0xFF;
-    int g1 = (col1 >> 8) & 0xFF;
-    int b1 = col1 & 0xFF;
-    int r2 = (col2 >> 16) & 0xFF;
-    int g2 = (col2 >> 8) & 0xFF;
-    int b2 = col2 & 0xFF;
-    int r = (int)lerp(r1, r2, t);
-    int g = (int)lerp(g1, g2, t);
-    int b = (int)lerp(b1, b2, t);
-    return (r << 16) | (g << 8) | b;
+	int r1 = (col1 >> 16) & 0xFF;
+	int g1 = (col1 >> 8) & 0xFF;
+	int b1 = col1 & 0xFF;
+	int r2 = (col2 >> 16) & 0xFF;
+	int g2 = (col2 >> 8) & 0xFF;
+	int b2 = col2 & 0xFF;
+	t = clamp(t);
+	int r = (int)lerp(r1, r2, t);
+	int g = (int)lerp(g1, g2, t);
+	int b = (int)lerp(b1, b2, t);
+	return (r << 16) | (g << 8) | b;
 }
 
-/* 1. Linear Altitude Gradient: deep blue (min) -> fiery red (max) */
 int linear_altitude_color(int altitude, int min_alt, int max_alt)
 {
-    double t = (max_alt == min_alt) ? 0.0 : ((double)(altitude - min_alt)) / (max_alt - min_alt);
-    int start_color = 0x0000FF; // deep blue
-    int end_color = 0xFF0000;   // red
-    return interpolate_color(start_color, end_color, t);
+	double t;
+	int start_color;
+	int end_color;
+
+	t = (max_alt == min_alt) ? 0.0 : ((double)(altitude - min_alt)) /\
+		 (max_alt - min_alt);
+	start_color = 0x0000FF;
+	end_color = 0xFF0000;
+	return (interpolate_color(start_color, end_color, t));
 }
 
 void	draw_line(t_point a, t_point b)

@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 14:04:24 by macauchy          #+#    #+#             */
-/*   Updated: 2025/03/20 15:06:47 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/03/20 15:38:16 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ typedef struct s_point
 	int		x;
 	int		y;
 	int		z;
+	int		color_altitude;
 }			t_point;
 
 t_fdf	*_fdf(void);
