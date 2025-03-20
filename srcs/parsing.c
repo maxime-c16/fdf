@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 11:40:36 by macauchy          #+#    #+#             */
-/*   Updated: 2025/03/20 15:08:04 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/03/20 22:31:21 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,4 +120,5 @@ void	parsing(char *filename)
 	close(fdf->fd);
 	fdf->center_x = ((fdf->width - 1) * fdf->camera.zoom) / 2.0;
 	fdf->center_y = ((fdf->height - 1) * fdf->camera.zoom) / 2.0;
+	print_map();
 }

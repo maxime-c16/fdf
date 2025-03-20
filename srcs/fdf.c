@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 13:54:29 by mcauchy           #+#    #+#             */
-/*   Updated: 2025/03/20 15:54:56 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/03/20 22:36:37 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,8 @@ int linear_altitude_color(int altitude, int min_alt, int max_alt)
 
 	t = (max_alt == min_alt) ? 0.0 : ((double)(altitude - min_alt)) /\
 		 (max_alt - min_alt);
-	start_color = 0x0000FF;
-	end_color = 0xFF0000;
+	start_color = 0xF0AAFF;
+	end_color = 0x0000FF;
 	return (interpolate_color(start_color, end_color, t));
 }
 
@@ -63,16 +63,29 @@ void	draw_line(t_point a, t_point b)
 	int		sy;
 	int		err;
 	int		e2;
+	t_point	start;
+	double	total_dist;
+	double	curr_dist;
+	double	t_param;
+	double	current_z;
 
 	fdf = _fdf();
+	start = a;
 	dx = abs(b.x - a.x);
 	dy = abs(b.y - a.y);
 	sx = a.x < b.x ? 1 : -1;
 	sy = a.y < b.y ? 1 : -1;
 	err = (dx > dy ? dx : -dy) / 2;
+	total_dist = sqrt(pow(b.x - a.x, 2) + pow(b.y - a.y, 2));
 	while (1)
 	{
-		mlx_pixel_put(fdf->mlx, fdf->win, a.x, a.y, linear_altitude_color(a.z, 0, 10));
+		curr_dist = sqrt(pow(a.x - start.x, 2) + pow(a.y - start.y, 2));
+		if (total_dist == 0)
+			t_param = 0;
+		else
+			t_param = curr_dist / total_dist;
+		current_z = lerp(a.z, b.z, t_param);
+		mlx_pixel_put(fdf->mlx, fdf->win, a.x, a.y, linear_altitude_color(current_z, fdf->min_altitude, fdf->max_altitude));
 		if (a.x == b.x && a.y == b.y)
 			break ;
 		e2 = err;
@@ -86,7 +99,6 @@ void	draw_line(t_point a, t_point b)
 			err += dx;
 			a.y += sy;
 		}
-
 	}
 }
 
@@ -105,23 +117,23 @@ void compute_height_factor(t_fdf *fdf)
 	int	j;
 
 	i = 0;
-	min_alt = INT_MAX;
-	max_alt = INT_MIN;
+	fdf->min_altitude = INT_MAX;
+	fdf->max_altitude = INT_MIN;
 	while (i < fdf->height)
 	{
 		j = 0;
 		while (j < fdf->width)
 		{
-			if (fdf->map[i][j] < min_alt)
-				min_alt = fdf->map[i][j];
-			if (fdf->map[i][j] > max_alt)
-				max_alt = fdf->map[i][j];
+			if (fdf->map[i][j] < fdf->min_altitude)
+				fdf->min_altitude = fdf->map[i][j];
+			if (fdf->map[i][j] > fdf->max_altitude)
+				fdf->max_altitude = fdf->map[i][j];
 			j++;
 		}
 		i++;
 	}
 	fdf->camera.height_factor = (fdf->camera.zoom\
-			/ max(1, max_alt - min_alt)) * 5.0;
+			/ max(1, fdf->max_altitude - min_alt)) * 5.0;
 }
 
 void	draw_map(void)
