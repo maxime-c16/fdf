@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pojection.c                                        :+:      :+:    :+:   */
+/*   projection.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:15:31 by macauchy          #+#    #+#             */
-/*   Updated: 2025/03/19 15:16:24 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/03/20 14:50:24 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,17 @@ static void	apply_x_rotation(double *y, double *z, double phi)
 	*z = z_new;
 }
 
+static void	apply_z_rotation(double *x, double *y, double psi)
+{
+	double x_new;
+	double y_new;
+
+	x_new = *x * cos(psi) - *y * sin(psi);
+	y_new = *x * sin(psi) + *y * cos(psi);
+	*x = x_new;
+	*y = y_new;
+}
+
 static void	apply_isometric_projection(t_point *point, double x, double y, double z)
 {
 	point->x = (x - y) * cos(M_PI / 6);
@@ -54,6 +65,7 @@ t_point	project_point(int i, int j)
 	z = fdf->map[i][j] * fdf->camera.height_factor;
 	apply_y_rotation(&x, &z, fdf->camera.rotation_y);
 	apply_x_rotation(&y, &z, fdf->camera.rotation_x);
+	apply_z_rotation(&x, &y, fdf->camera.rotation_z);
 	apply_isometric_projection(&point, x, y, z);
 	point.x += fdf->camera.x_offset;
 	point.y += fdf->camera.y_offset;

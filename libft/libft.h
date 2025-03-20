@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 12:45:04 by mcauchy           #+#    #+#             */
-/*   Updated: 2025/03/19 13:50:11 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/03/20 14:07:13 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <string.h>
 # include <strings.h>
 # include <fcntl.h>
+# include <pthread.h>
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 32

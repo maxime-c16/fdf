@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 14:04:24 by macauchy          #+#    #+#             */
-/*   Updated: 2025/03/19 15:29:56 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/03/20 14:56:45 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,12 @@
 # define RIGHT_ARROW 124
 # define DOWN_ARROW 125
 # define UP_ARROW 126
-# define ADD_X_ROTATE 0
-# define SUB_X_ROTATE 2
-# define ADD_Y_ROTATE 13
-# define SUB_Y_ROTATE 1
+# define ADD_X_ROTATE 13
+# define SUB_X_ROTATE 1
+# define ADD_Y_ROTATE 0
+# define SUB_Y_ROTATE 2
+# define ADD_Z_ROTATE 12
+# define SUB_Z_ROTATE 14
 
 typedef struct s_camera
 {
@@ -38,6 +40,7 @@ typedef struct s_camera
 	int		y_offset;
 	double	rotation_x;
 	double	rotation_y;
+	double	rotation_z;
 	double	height_factor;
 }			t_camera;
 
@@ -49,6 +52,7 @@ typedef struct s_fdf
 	int		height;
 	int		**map;
 	int		fd;
+	int		frame_count;
 	t_camera	camera;
 }			t_fdf;
 

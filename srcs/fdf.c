@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 13:54:29 by mcauchy           #+#    #+#             */
-/*   Updated: 2025/03/19 15:33:21 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/03/20 14:51:08 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ void	draw_line(t_point a, t_point b)
 			err += dx;
 			a.y += sy;
 		}
-		
+
 	}
 }
 
@@ -120,8 +120,8 @@ void	draw_map(void)
 	t_point	a;
 	t_point	b;
 
-	fdf = _fdf();
 	i = 0;
+	fdf = _fdf();
 	while (i < fdf->height)
 	{
 		j = 0;
@@ -151,7 +151,6 @@ int	on_close(void)
 
 int	key_hook(int keycode)
 {
-	printf("keycode: %d\n", keycode);
 	if (keycode == 53)
 		exit(0);
 	if (keycode == LEFT_ARROW)
@@ -170,6 +169,10 @@ int	key_hook(int keycode)
 		_fdf()->camera.rotation_y += 0.1;
 	if (keycode == SUB_Y_ROTATE)
 		_fdf()->camera.rotation_y -= 0.1;
+	if (keycode == ADD_Z_ROTATE)
+		_fdf()->camera.rotation_z += 0.1;
+	if (keycode == SUB_Z_ROTATE)
+		_fdf()->camera.rotation_z -= 0.1;
 	mlx_clear_window(_fdf()->mlx, _fdf()->win);
 	draw_map();
 	return (0);
