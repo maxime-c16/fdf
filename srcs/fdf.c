@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 13:54:29 by mcauchy           #+#    #+#             */
-/*   Updated: 2025/03/20 22:36:37 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/03/22 19:51:19 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,22 @@ int linear_altitude_color(int altitude, int min_alt, int max_alt)
 	return (interpolate_color(start_color, end_color, t));
 }
 
+void	translate_mlx_to_gl(t_point a, t_point *a_gl)
+{
+	t_fdf	*fdf;
+	t_ft_gl	*gl;
+	double	scale_x;
+	double	scale_y;
+
+	fdf = _fdf();
+	gl = fdf->gl;
+	scale_x = (double)gl->width / (double)WIDTH;
+	scale_y = (double)gl->height / (double)HEIGHT;
+	a_gl->x = a.x * scale_x;
+	a_gl->y = a.y * scale_y;
+	a_gl->z = a.z;
+}
+
 void	draw_line(t_point a, t_point b)
 {
 	t_fdf	*fdf;
@@ -64,6 +80,7 @@ void	draw_line(t_point a, t_point b)
 	int		err;
 	int		e2;
 	t_point	start;
+	t_point	a_gl;
 	double	total_dist;
 	double	curr_dist;
 	double	t_param;
@@ -85,6 +102,8 @@ void	draw_line(t_point a, t_point b)
 		else
 			t_param = curr_dist / total_dist;
 		current_z = lerp(a.z, b.z, t_param);
+		translate_mlx_to_gl(a, &a_gl);
+		ft_gl_pixel_put(_fdf()->gl, a_gl.x, a_gl.y, linear_altitude_color(current_z, fdf->min_altitude, fdf->max_altitude));
 		mlx_pixel_put(fdf->mlx, fdf->win, a.x, a.y, linear_altitude_color(current_z, fdf->min_altitude, fdf->max_altitude));
 		if (a.x == b.x && a.y == b.y)
 			break ;
@@ -111,8 +130,6 @@ int	max(int a, int b)
 
 void compute_height_factor(t_fdf *fdf)
 {
-	int min_alt;
-	int max_alt;
 	int i;
 	int	j;
 
@@ -132,8 +149,34 @@ void compute_height_factor(t_fdf *fdf)
 		}
 		i++;
 	}
-	fdf->camera.height_factor = (fdf->camera.zoom\
-			/ max(1, fdf->max_altitude - min_alt)) * 5.0;
+	fdf->camera.height_factor = ((double)fdf->camera.zoom
+		/ max(1, fdf->max_altitude - fdf->min_altitude)) * 5.0;
+}
+
+char	*ft_dtoa(double n, int precision)
+{
+	char	*str;
+	char	*tmp;
+	int		int_part;
+	int		dec_part;
+	int		i;
+
+	int_part = (int)n;
+	dec_part = (int)((n - int_part) * pow(10, precision));
+	str = ft_itoa(int_part);
+	tmp = ft_strjoin(str, ".");
+	free(str);
+	str = ft_strjoin(tmp, ft_itoa(dec_part));
+	free(tmp);
+	i = ft_strlen(str) - 1;
+	while (str[i] == '0')
+	{
+		str[i] = '\0';
+		i--;
+	}
+	if (str[i] == '.')
+		str[i] = '\0';
+	return (str);
 }
 
 void	draw_map(void)
@@ -166,10 +209,31 @@ void	draw_map(void)
 		}
 		i++;
 	}
+	mlx_string_put(fdf->mlx, fdf->win, 10, 10, 0xFFFFFF, "X rotation: ");
+	mlx_string_put(fdf->mlx, fdf->win, 10, 30, 0xFFFFFF, "Y rotation: ");
+	mlx_string_put(fdf->mlx, fdf->win, 10, 50, 0xFFFFFF, "Z rotation: ");
+	mlx_string_put(fdf->mlx, fdf->win, 10, 70, 0xFFFFFF, "Zoom: ");
+	mlx_string_put(fdf->mlx, fdf->win, 10, 90, 0xFFFFFF, "X offset: ");
+	mlx_string_put(fdf->mlx, fdf->win, 10, 110, 0xFFFFFF, "Y offset: ");
+	mlx_string_put(fdf->mlx, fdf->win, 10, 130, 0xFFFFFF, "Height factor: ");
+	mlx_string_put(fdf->mlx, fdf->win, 10, 150, 0xFFFFFF, "Min altitude: ");
+	mlx_string_put(fdf->mlx, fdf->win, 10, 170, 0xFFFFFF, "Max altitude: ");
+	//add values
+	mlx_string_put(fdf->mlx, fdf->win, 200, 10, 0xFFFFFF, ft_dtoa(fdf->camera.rotation_x, 2));
+	mlx_string_put(fdf->mlx, fdf->win, 200, 30, 0xFFFFFF, ft_dtoa(fdf->camera.rotation_y, 2));
+	mlx_string_put(fdf->mlx, fdf->win, 200, 50, 0xFFFFFF, ft_dtoa(fdf->camera.rotation_z, 2));
+	mlx_string_put(fdf->mlx, fdf->win, 200, 70, 0xFFFFFF, ft_itoa(fdf->camera.zoom));
+	mlx_string_put(fdf->mlx, fdf->win, 200, 90, 0xFFFFFF, ft_itoa(fdf->camera.x_offset));
+	mlx_string_put(fdf->mlx, fdf->win, 200, 110, 0xFFFFFF, ft_itoa(fdf->camera.y_offset));
+	mlx_string_put(fdf->mlx, fdf->win, 200, 130, 0xFFFFFF, ft_dtoa(fdf->camera.height_factor, 2));
+	mlx_string_put(fdf->mlx, fdf->win, 200, 150, 0xFFFFFF, ft_itoa(fdf->min_altitude));
+	mlx_string_put(fdf->mlx, fdf->win, 200, 170, 0xFFFFFF, ft_itoa(fdf->max_altitude));
 }
 
 int	on_close(void)
 {
+	mlx_destroy_window(_fdf()->mlx, _fdf()->win);
+	ft_gl_destroy(_fdf()->gl);
 	exit(0);
 }
 
@@ -197,7 +261,13 @@ int	key_hook(int keycode)
 		_fdf()->camera.rotation_z += 0.1;
 	if (keycode == SUB_Z_ROTATE)
 		_fdf()->camera.rotation_z -= 0.1;
+	if (keycode == ADD_ZOOM)
+		_fdf()->camera.zoom += 1;
+	if (keycode == SUB_ZOOM)
+		_fdf()->camera.zoom -= 1;
 	mlx_clear_window(_fdf()->mlx, _fdf()->win);
+	ft_gl_clear(_fdf()->gl);
+	compute_height_factor(_fdf());
 	draw_map();
 	return (0);
 }

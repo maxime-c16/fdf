@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 14:04:24 by macauchy          #+#    #+#             */
-/*   Updated: 2025/03/20 22:28:19 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/03/21 14:24:57 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 # define FDF_H
 
 # include "../mlx/mlx.h"
+# include "../ft_gl/include/libft_gl.h"
 # include "../libft/libft.h"
 # include <math.h>
 # include <limits.h>
@@ -32,6 +33,8 @@
 # define SUB_Y_ROTATE 2
 # define ADD_Z_ROTATE 12
 # define SUB_Z_ROTATE 14
+# define ADD_ZOOM 69
+# define SUB_ZOOM 78
 
 typedef struct s_camera
 {
@@ -58,6 +61,7 @@ typedef struct s_fdf
 	int		min_altitude;
 	int		max_altitude;
 	t_camera	camera;
+	t_ft_gl	*gl;
 }			t_fdf;
 
 typedef struct s_point
