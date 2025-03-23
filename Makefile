@@ -6,11 +6,11 @@
 #    By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/18 14:49:38 by macauchy          #+#    #+#              #
-#    Updated: 2025/03/22 20:18:01 by macauchy         ###   ########.fr        #
+#    Updated: 2025/03/23 11:12:26 by macauchy         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-FILES	=	fdf.c singleton.c parsing.c projection.c
+FILES	=	fdf.c singleton.c parsing.c projection.c gyro.c
 SRC_DIR	=	srcs
 SRCS	=	$(addprefix $(SRC_DIR)/, $(FILES))
 OBJ_DIR	=	.objs

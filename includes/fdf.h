@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 14:04:24 by macauchy          #+#    #+#             */
-/*   Updated: 2025/03/21 14:24:57 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/03/23 11:12:47 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,14 @@
 # define SUB_Z_ROTATE 14
 # define ADD_ZOOM 69
 # define SUB_ZOOM 78
+# define CH_PROJ 35
+
+# define PROJ_ISOMETRIC 0
+# define PROJ_PERSPECTIVE 1
+# define PROJ_PARALLEL 2
+# define PROJ_OBLIQUE 3
+# define PROJ_CABINET 4
+# define PROJ_CONIC 5
 
 typedef struct s_camera
 {
@@ -60,6 +68,7 @@ typedef struct s_fdf
 	double	center_y;
 	int		min_altitude;
 	int		max_altitude;
+	int		proj_style;
 	t_camera	camera;
 	t_ft_gl	*gl;
 }			t_fdf;
@@ -75,5 +84,6 @@ typedef struct s_point
 t_fdf	*_fdf(void);
 void	parsing(char *filename);
 t_point	project_point(int i, int j);
+void	draw_gyroscope(t_fdf *fdf);
 
 #endif

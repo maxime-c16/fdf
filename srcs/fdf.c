@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 13:54:29 by mcauchy           #+#    #+#             */
-/*   Updated: 2025/03/22 19:51:19 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/03/23 11:14:45 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,8 +102,8 @@ void	draw_line(t_point a, t_point b)
 		else
 			t_param = curr_dist / total_dist;
 		current_z = lerp(a.z, b.z, t_param);
-		translate_mlx_to_gl(a, &a_gl);
-		ft_gl_pixel_put(_fdf()->gl, a_gl.x, a_gl.y, linear_altitude_color(current_z, fdf->min_altitude, fdf->max_altitude));
+		// translate_mlx_to_gl(a, &a_gl);
+		// ft_gl_pixel_put(_fdf()->gl, a_gl.x, a_gl.y, linear_altitude_color(current_z, fdf->min_altitude, fdf->max_altitude));
 		mlx_pixel_put(fdf->mlx, fdf->win, a.x, a.y, linear_altitude_color(current_z, fdf->min_altitude, fdf->max_altitude));
 		if (a.x == b.x && a.y == b.y)
 			break ;
@@ -150,7 +150,7 @@ void compute_height_factor(t_fdf *fdf)
 		i++;
 	}
 	fdf->camera.height_factor = ((double)fdf->camera.zoom
-		/ max(1, fdf->max_altitude - fdf->min_altitude)) * 5.0;
+	/ max(1, fdf->max_altitude - fdf->min_altitude)) * 5.0;
 }
 
 char	*ft_dtoa(double n, int precision)
@@ -209,25 +209,22 @@ void	draw_map(void)
 		}
 		i++;
 	}
-	mlx_string_put(fdf->mlx, fdf->win, 10, 10, 0xFFFFFF, "X rotation: ");
-	mlx_string_put(fdf->mlx, fdf->win, 10, 30, 0xFFFFFF, "Y rotation: ");
-	mlx_string_put(fdf->mlx, fdf->win, 10, 50, 0xFFFFFF, "Z rotation: ");
-	mlx_string_put(fdf->mlx, fdf->win, 10, 70, 0xFFFFFF, "Zoom: ");
-	mlx_string_put(fdf->mlx, fdf->win, 10, 90, 0xFFFFFF, "X offset: ");
-	mlx_string_put(fdf->mlx, fdf->win, 10, 110, 0xFFFFFF, "Y offset: ");
-	mlx_string_put(fdf->mlx, fdf->win, 10, 130, 0xFFFFFF, "Height factor: ");
-	mlx_string_put(fdf->mlx, fdf->win, 10, 150, 0xFFFFFF, "Min altitude: ");
-	mlx_string_put(fdf->mlx, fdf->win, 10, 170, 0xFFFFFF, "Max altitude: ");
-	//add values
-	mlx_string_put(fdf->mlx, fdf->win, 200, 10, 0xFFFFFF, ft_dtoa(fdf->camera.rotation_x, 2));
-	mlx_string_put(fdf->mlx, fdf->win, 200, 30, 0xFFFFFF, ft_dtoa(fdf->camera.rotation_y, 2));
-	mlx_string_put(fdf->mlx, fdf->win, 200, 50, 0xFFFFFF, ft_dtoa(fdf->camera.rotation_z, 2));
-	mlx_string_put(fdf->mlx, fdf->win, 200, 70, 0xFFFFFF, ft_itoa(fdf->camera.zoom));
-	mlx_string_put(fdf->mlx, fdf->win, 200, 90, 0xFFFFFF, ft_itoa(fdf->camera.x_offset));
-	mlx_string_put(fdf->mlx, fdf->win, 200, 110, 0xFFFFFF, ft_itoa(fdf->camera.y_offset));
-	mlx_string_put(fdf->mlx, fdf->win, 200, 130, 0xFFFFFF, ft_dtoa(fdf->camera.height_factor, 2));
-	mlx_string_put(fdf->mlx, fdf->win, 200, 150, 0xFFFFFF, ft_itoa(fdf->min_altitude));
-	mlx_string_put(fdf->mlx, fdf->win, 200, 170, 0xFFFFFF, ft_itoa(fdf->max_altitude));
+	//print projection type mlx_string_put
+
+	mlx_string_put(fdf->mlx, fdf->win, 10, 10, 0xFFFFFF, "Projection type:");
+	if (fdf->proj_style == PROJ_ISOMETRIC)
+		mlx_string_put(fdf->mlx, fdf->win, 10, 30, 0xFFFFFF, "Isometric");
+	else if (fdf->proj_style == PROJ_PERSPECTIVE)
+		mlx_string_put(fdf->mlx, fdf->win, 10, 30, 0xFFFFFF, "Perspective");
+	else if (fdf->proj_style == PROJ_OBLIQUE)
+		mlx_string_put(fdf->mlx, fdf->win, 10, 30, 0xFFFFFF, "Oblique");
+	else if (fdf->proj_style == PROJ_CABINET)
+		mlx_string_put(fdf->mlx, fdf->win, 10, 30, 0xFFFFFF, "Cabinet");
+	else if (fdf->proj_style == PROJ_CONIC)
+		mlx_string_put(fdf->mlx, fdf->win, 10, 30, 0xFFFFFF, "Conic");
+	else
+		mlx_string_put(fdf->mlx, fdf->win, 10, 30, 0xFFFFFF, "Parallel");
+	// draw_gyroscope(fdf);
 }
 
 int	on_close(void)
@@ -265,9 +262,10 @@ int	key_hook(int keycode)
 		_fdf()->camera.zoom += 1;
 	if (keycode == SUB_ZOOM)
 		_fdf()->camera.zoom -= 1;
+	if (keycode == CH_PROJ)
+		_fdf()->proj_style = (_fdf()->proj_style + 1) % 6;
 	mlx_clear_window(_fdf()->mlx, _fdf()->win);
-	ft_gl_clear(_fdf()->gl);
-	compute_height_factor(_fdf());
+	// ft_gl_clear(_fdf()->gl);
 	draw_map();
 	return (0);
 }
