@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 11:40:36 by macauchy          #+#    #+#             */
-/*   Updated: 2025/03/23 10:38:16 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/03/23 19:42:39 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ static void	count_lines(char *filename)
 		lines++;
 	close(fd);
 	_fdf()->height = lines;
-	printf("height: %d\n", _fdf()->height);
 }
 
 static void	insert_values(char *line, int i)

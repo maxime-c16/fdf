@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 14:04:24 by macauchy          #+#    #+#             */
-/*   Updated: 2025/03/23 18:32:43 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/03/23 19:16:53 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,19 @@ typedef struct s_camera
 	double	height_factor;
 }			t_camera;
 
+typedef struct s_gyro
+{
+	char	axis;
+	double	angle;
+	double	rad;
+	double	*rx;
+	double	*ry;
+	double	*rz;
+	int		cx;
+	int		cy;
+	double	height_factor;
+}				t_gyro;
+
 typedef struct s_fdf
 {
 	void	*mlx;
@@ -74,20 +87,9 @@ typedef struct s_fdf
 	int		max_altitude;
 	int		proj_style;
 	t_camera	camera;
+	t_gyro	gyro;
 	t_ft_gl	*gl;
 }			t_fdf;
-
-typedef struct s_gyro
-{
-	char	axis;
-	double	angle;
-	double	rad;
-	double	rx;
-	double	ry;
-	double	rz;
-	int		cx;
-	int		cy;
-}				t_gyro;
 
 typedef struct s_point
 {
@@ -98,8 +100,10 @@ typedef struct s_point
 }			t_point;
 
 t_fdf	*_fdf(void);
+int		max(int a, int b);
 void	parsing(char *filename);
 t_point	project_point(int i, int j);
+t_point	project_point_scaled(int i, int j);
 void	apply_proj(t_point *point, double x, double y, double z);
 double	lerp(double a, double b, double t);
 void	draw_gyroscope_sphere(t_fdf *fdf);

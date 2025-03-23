@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 13:54:29 by mcauchy           #+#    #+#             */
-/*   Updated: 2025/03/23 18:37:17 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/03/23 18:54:42 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,6 +186,8 @@ void	draw_map(void)
 	int		j;
 	t_point	a;
 	t_point	b;
+	t_point	gyro_a;
+	t_point	gyro_b;
 
 	i = 0;
 	fdf = _fdf();
@@ -195,15 +197,20 @@ void	draw_map(void)
 		while (j < fdf->width)
 		{
 			a = project_point(i, j);
+			gyro_a = project_point_scaled(i, j);
 			if (j + 1 < fdf->width)
 			{
 				b = project_point(i, j + 1);
+				gyro_b = project_point_scaled(i, j + 1);
 				draw_line(a, b);
+				draw_line(gyro_a, gyro_b);
 			}
 			if (i + 1 < fdf->height)
 			{
 				b = project_point(i + 1, j);
+				gyro_b = project_point_scaled(i + 1, j);
 				draw_line(a, b);
+				draw_line(gyro_a, gyro_b);
 			}
 			j++;
 		}

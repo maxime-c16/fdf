@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 11:12:13 by macauchy          #+#    #+#             */
-/*   Updated: 2025/03/23 18:29:44 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/03/23 19:25:19 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,9 +90,9 @@ static void	get_gyro_point(t_gyro *g, int *px, int *py)
 		y = g->rad * sin(g->angle);
 		z = 0;
 	}
-	apply_x_rotation(&y, &z, g->rx);
-	apply_y_rotation(&x, &z, g->ry);
-	apply_z_rotation(&x, &y, g->rz);
+	apply_y_rotation(&x, &z, *g->ry);
+	apply_x_rotation(&y, &z, *g->rx);
+	apply_z_rotation(&x, &y, *g->rz);
 	apply_proj(&proj, x, y, z);
 	*px = proj.x + g->cx;
 	*py = proj.y + g->cy;
@@ -119,25 +119,18 @@ static void	draw_colored_line(t_fdf *fdf, int *curr, int *v, char axis)
 
 static void	draw_circle(t_fdf *fdf, char axis)
 {
-	t_gyro	gyro;
 	int		v[2];
 	int		curr[2];
 	int		i;
 
-	gyro.axis = axis;
-	gyro.rad = (double)WIDTH / 20.0;
-	gyro.rx = fdf->camera.rotation_x;
-	gyro.ry = fdf->camera.rotation_y;
-	gyro.rz = fdf->camera.rotation_z;
-	gyro.cx = WIDTH - (int)gyro.rad - 10;
-	gyro.cy = (int)gyro.rad + 10;
 	i = 0;
+	fdf->gyro.axis = axis;
 	while (i <= SEG)
 	{
-		gyro.angle = (2.0 * M_PI * i) / SEG;
-		get_gyro_point(&gyro, &curr[0], &curr[1]);
+		fdf->gyro.angle = (2.0 * M_PI * i) / SEG;
+		get_gyro_point(&fdf->gyro, &curr[0], &curr[1]);
 		if (i > 0)
-			draw_colored_line(fdf, curr, v, gyro.axis);
+			draw_colored_line(fdf, curr, v, fdf->gyro.axis);
 		v[0] = curr[0];
 		v[1] = curr[1];
 		i++;
