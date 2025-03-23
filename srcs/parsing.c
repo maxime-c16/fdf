@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 11:40:36 by macauchy          #+#    #+#             */
-/*   Updated: 2025/03/23 19:42:39 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/03/23 20:22:27 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,7 @@ void	parsing(char *filename)
 	}
 	read_from_fd(fdf->fd);
 	close(fdf->fd);
+	fdf->camera.zoom = HEIGHT  / max(1, fdf->width);
 	fdf->center_x = ((fdf->width - 1) * fdf->camera.zoom) / 2.0;
 	fdf->center_y = ((fdf->height - 1) * fdf->camera.zoom) / 2.0;
 }
