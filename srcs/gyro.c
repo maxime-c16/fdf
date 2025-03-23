@@ -6,101 +6,146 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 11:12:13 by macauchy          #+#    #+#             */
-/*   Updated: 2025/03/23 11:12:34 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/03/23 18:29:44 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/fdf.h"
 
-// Helper function to draw a simple 2D line using Bresenham’s algorithm.
-void draw_simple_line(void *mlx, void *win, int x0, int y0, int x1, int y1, int color)
+static void	draw_line_c(t_point a, t_point b, int color)
 {
-	int dx = abs(x1 - x0);
-	int dy = abs(y1 - y0);
-	int sx = (x0 < x1) ? 1 : -1;
-	int sy = (y0 < y1) ? 1 : -1;
-	int err = dx - dy;
-	int e2;
+	t_fdf	*fdf;
+	int		dx;
+	int		dy;
+	int		sx;
+	int		sy;
+	int		err;
+	int		e2;
+	t_point	start;
+	t_point	a_gl;
+	double	total_dist;
+	double	curr_dist;
+	double	t_param;
+	double	current_z;
 
+	fdf = _fdf();
+	start = a;
+	dx = abs(b.x - a.x);
+	dy = abs(b.y - a.y);
+	sx = a.x < b.x ? 1 : -1;
+	sy = a.y < b.y ? 1 : -1;
+	err = (dx > dy ? dx : -dy) / 2;
+	total_dist = sqrt(pow(b.x - a.x, 2) + pow(b.y - a.y, 2));
 	while (1)
 	{
-		mlx_pixel_put(mlx, win, x0, y0, color);
-		if (x0 == x1 && y0 == y1)
+		curr_dist = sqrt(pow(a.x - start.x, 2) + pow(a.y - start.y, 2));
+		if (total_dist == 0)
+			t_param = 0;
+		else
+			t_param = curr_dist / total_dist;
+		current_z = lerp(a.z, b.z, t_param);
+		// translate_mlx_to_gl(a, &a_gl);
+		// ft_gl_pixel_put(_fdf()->gl, a_gl.x, a_gl.y, linear_altitude_color(current_z, fdf->min_altitude, fdf->max_altitude));
+		mlx_pixel_put(fdf->mlx, fdf->win, a.x, a.y, color);
+		if (a.x == b.x && a.y == b.y)
 			break ;
-		e2 = err * 2;
-		if (e2 > -dy)
+		e2 = err;
+		if (e2 > -dx)
 		{
 			err -= dy;
-			x0 += sx;
+			a.x += sx;
 		}
-		if (e2 < dx)
+		if (e2 < dy)
 		{
 			err += dx;
-			y0 += sy;
+			a.y += sy;
 		}
 	}
 }
 
-// Helper function to draw a circle using the midpoint circle algorithm.
-void draw_circle(void *mlx, void *win, int cx, int cy, int radius, int color)
+static void	get_gyro_point(t_gyro *g, int *px, int *py)
 {
-	int x = radius;
-	int y = 0;
-	int err = 0;
+	double	x;
+	double	y;
+	double	z;
+	double	res1;
+	double	res2;
+	t_point	proj;
 
-	while (x >= y)
+	if (g->axis == 'x')
 	{
-		mlx_pixel_put(mlx, win, cx + x, cy + y, color);
-		mlx_pixel_put(mlx, win, cx + y, cy + x, color);
-		mlx_pixel_put(mlx, win, cx - y, cy + x, color);
-		mlx_pixel_put(mlx, win, cx - x, cy + y, color);
-		mlx_pixel_put(mlx, win, cx - x, cy - y, color);
-		mlx_pixel_put(mlx, win, cx - y, cy - x, color);
-		mlx_pixel_put(mlx, win, cx + y, cy - x, color);
-		mlx_pixel_put(mlx, win, cx + x, cy - y, color);
-		y++;
-		if (err <= 0)
-		{
-			err += 2 * y + 1;
-		}
-		if (err > 0)
-		{
-			x--;
-			err -= 2 * x + 1;
-		}
+		x = 0;
+		y = g->rad * cos(g->angle);
+		z = g->rad * sin(g->angle);
+	}
+	else if (g->axis == 'y')
+	{
+		x = g->rad * cos(g->angle);
+		y = 0;
+		z = g->rad * sin(g->angle);
+	}
+	else
+	{
+		x = g->rad * cos(g->angle);
+		y = g->rad * sin(g->angle);
+		z = 0;
+	}
+	apply_x_rotation(&y, &z, g->rx);
+	apply_y_rotation(&x, &z, g->ry);
+	apply_z_rotation(&x, &y, g->rz);
+	apply_proj(&proj, x, y, z);
+	*px = proj.x + g->cx;
+	*py = proj.y + g->cy;
+}
+
+static void	draw_colored_line(t_fdf *fdf, int *curr, int *v, char axis)
+{
+	t_point	a;
+	t_point	b;
+
+	a.x = curr[0];
+	a.y = curr[1];
+	a.z = 0;
+	b.x = v[0];
+	b.y = v[1];
+	b.z = 0;
+	if (axis == 'x')
+		draw_line_c(a, b, 0xFF0000);
+	else if (axis == 'y')
+		draw_line_c(a, b, 0x00FF00);
+	else
+		draw_line_c(a, b, 0x0000FF);
+}
+
+static void	draw_circle(t_fdf *fdf, char axis)
+{
+	t_gyro	gyro;
+	int		v[2];
+	int		curr[2];
+	int		i;
+
+	gyro.axis = axis;
+	gyro.rad = (double)WIDTH / 20.0;
+	gyro.rx = fdf->camera.rotation_x;
+	gyro.ry = fdf->camera.rotation_y;
+	gyro.rz = fdf->camera.rotation_z;
+	gyro.cx = WIDTH - (int)gyro.rad - 10;
+	gyro.cy = (int)gyro.rad + 10;
+	i = 0;
+	while (i <= SEG)
+	{
+		gyro.angle = (2.0 * M_PI * i) / SEG;
+		get_gyro_point(&gyro, &curr[0], &curr[1]);
+		if (i > 0)
+			draw_colored_line(fdf, curr, v, gyro.axis);
+		v[0] = curr[0];
+		v[1] = curr[1];
+		i++;
 	}
 }
-
-// Draws a gyroscope in the top-right corner showing the three rotation axes.
-void draw_gyroscope(t_fdf *fdf)
+void	draw_gyroscope_sphere(t_fdf *fdf)
 {
-	// Define the gyroscope's position and radius.
-	int cx = WIDTH - 70;  // Center X in MLX window (adjust as needed)
-	int cy = 70;          // Center Y in MLX window (adjust as needed)
-	int radius = 50;      // Outer circle radius
-
-	// Draw the outer circle (white)
-	draw_circle(fdf->mlx, fdf->win, cx, cy, radius, 0xFFFFFF);
-
-	// Compute endpoints for each axis line.
-	// For simplicity, use the camera rotation angles directly.
-	// You may add an offset to spread them apart if desired.
-	int x_end, y_end;
-	double r = (double)radius * 0.8; // length of axis line
-
-	// X-axis (red)
-	x_end = cx + (int)(r * cos(fdf->camera.rotation_x));
-	y_end = cy + (int)(r * sin(fdf->camera.rotation_x));
-	draw_simple_line(fdf->mlx, fdf->win, cx, cy, x_end, y_end, 0xFF0000);
-
-	// Y-axis (green)
-	x_end = cx + (int)(r * cos(fdf->camera.rotation_y));
-	y_end = cy + (int)(r * sin(fdf->camera.rotation_y));
-	draw_simple_line(fdf->mlx, fdf->win, cx, cy, x_end, y_end, 0x00FF00);
-
-	// Z-axis (blue)
-	x_end = cx + (int)(r * cos(fdf->camera.rotation_z));
-	y_end = cy + (int)(r * sin(fdf->camera.rotation_z));
-	draw_simple_line(fdf->mlx, fdf->win, cx, cy, x_end, y_end, 0x0000FF);
+	draw_circle(fdf, 'x');
+	draw_circle(fdf, 'y');
+	draw_circle(fdf, 'z');
 }
-

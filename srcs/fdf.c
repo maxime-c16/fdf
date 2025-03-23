@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 13:54:29 by mcauchy           #+#    #+#             */
-/*   Updated: 2025/03/23 11:14:45 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/03/23 18:37:17 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,9 @@ static double clamp(double t)
 	return (t);
 }
 
-static double lerp(double a, double b, double t)
+double lerp(double a, double b, double t)
 {
-	return (a + t * (b - a));
+	return (a * t + b * (1.0 - t));
 }
 
 static int interpolate_color(int col1, int col2, double t)
@@ -150,7 +150,7 @@ void compute_height_factor(t_fdf *fdf)
 		i++;
 	}
 	fdf->camera.height_factor = ((double)fdf->camera.zoom
-	/ max(1, fdf->max_altitude - fdf->min_altitude)) * 5.0;
+	/ max(1, fdf->max_altitude - fdf->min_altitude)) * 2.0;
 }
 
 char	*ft_dtoa(double n, int precision)
@@ -224,7 +224,7 @@ void	draw_map(void)
 		mlx_string_put(fdf->mlx, fdf->win, 10, 30, 0xFFFFFF, "Conic");
 	else
 		mlx_string_put(fdf->mlx, fdf->win, 10, 30, 0xFFFFFF, "Parallel");
-	// draw_gyroscope(fdf);
+	draw_gyroscope_sphere(fdf);
 }
 
 int	on_close(void)
@@ -236,7 +236,7 @@ int	on_close(void)
 
 int	key_hook(int keycode)
 {
-	if (keycode == 53)
+	if (keycode == ESC)
 		exit(0);
 	if (keycode == LEFT_ARROW)
 		_fdf()->camera.x_offset -= 10;
@@ -264,6 +264,16 @@ int	key_hook(int keycode)
 		_fdf()->camera.zoom -= 1;
 	if (keycode == CH_PROJ)
 		_fdf()->proj_style = (_fdf()->proj_style + 1) % 6;
+	if (keycode == RESET)
+	{
+		_fdf()->camera.zoom = (WIDTH + HEIGHT) / 40;
+		_fdf()->camera.x_offset = WIDTH / 2;
+		_fdf()->camera.y_offset = HEIGHT / 2;
+		_fdf()->camera.rotation_x = 0.0;
+		_fdf()->camera.rotation_y = 0.0;
+		_fdf()->camera.rotation_z = 0.0;
+		_fdf()->proj_style = PROJ_ISOMETRIC;
+	}
 	mlx_clear_window(_fdf()->mlx, _fdf()->win);
 	// ft_gl_clear(_fdf()->gl);
 	draw_map();

@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 14:04:24 by macauchy          #+#    #+#             */
-/*   Updated: 2025/03/23 11:12:47 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/03/23 18:32:43 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@
 # define WIDTH 800
 # define HEIGHT 600
 
+# define SEG 36
+
 # define LEFT_ARROW 123
 # define RIGHT_ARROW 124
 # define DOWN_ARROW 125
@@ -31,11 +33,13 @@
 # define SUB_X_ROTATE 1
 # define ADD_Y_ROTATE 0
 # define SUB_Y_ROTATE 2
-# define ADD_Z_ROTATE 12
-# define SUB_Z_ROTATE 14
+# define ADD_Z_ROTATE 14
+# define SUB_Z_ROTATE 12
 # define ADD_ZOOM 69
 # define SUB_ZOOM 78
 # define CH_PROJ 35
+# define ESC 53
+# define RESET 15
 
 # define PROJ_ISOMETRIC 0
 # define PROJ_PERSPECTIVE 1
@@ -73,6 +77,18 @@ typedef struct s_fdf
 	t_ft_gl	*gl;
 }			t_fdf;
 
+typedef struct s_gyro
+{
+	char	axis;
+	double	angle;
+	double	rad;
+	double	rx;
+	double	ry;
+	double	rz;
+	int		cx;
+	int		cy;
+}				t_gyro;
+
 typedef struct s_point
 {
 	int		x;
@@ -84,6 +100,11 @@ typedef struct s_point
 t_fdf	*_fdf(void);
 void	parsing(char *filename);
 t_point	project_point(int i, int j);
-void	draw_gyroscope(t_fdf *fdf);
+void	apply_proj(t_point *point, double x, double y, double z);
+double	lerp(double a, double b, double t);
+void	draw_gyroscope_sphere(t_fdf *fdf);
+void	apply_y_rotation(double *x, double *z, double theta);
+void	apply_x_rotation(double *y, double *z, double phi);
+void	apply_z_rotation(double *x, double *y, double psi);
 
 #endif

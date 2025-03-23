@@ -6,13 +6,13 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:15:31 by macauchy          #+#    #+#             */
-/*   Updated: 2025/03/23 11:03:04 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/03/23 18:22:53 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/fdf.h"
 
-static void	apply_y_rotation(double *x, double *z, double theta)
+void	apply_y_rotation(double *x, double *z, double theta)
 {
 	double x_new;
 	double z_new;
@@ -23,7 +23,7 @@ static void	apply_y_rotation(double *x, double *z, double theta)
 	*z = z_new;
 }
 
-static void	apply_x_rotation(double *y, double *z, double phi)
+void	apply_x_rotation(double *y, double *z, double phi)
 {
 	double y_new;
 	double z_new;
@@ -34,7 +34,7 @@ static void	apply_x_rotation(double *y, double *z, double phi)
 	*z = z_new;
 }
 
-static void	apply_z_rotation(double *x, double *y, double psi)
+void	apply_z_rotation(double *x, double *y, double psi)
 {
 	double x_new;
 	double y_new;
@@ -75,7 +75,7 @@ static void	apply_conic_projection(t_point *point, double x, double y, double z)
 	point->y = y * z;
 }
 
-static void	apply_proj(t_point *point, double x, double y, double z)
+void	apply_proj(t_point *point, double x, double y, double z)
 {
 	t_fdf	*fdf;
 
