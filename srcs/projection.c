@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:15:31 by macauchy          #+#    #+#             */
-/*   Updated: 2025/03/23 20:28:31 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/03/24 11:39:59 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	apply_y_rotation(double *x, double *z, double theta)
 	double z_new;
 
 	x_new = *x * cos(theta) + *z * sin(theta);
-	z_new = -*x * sin(theta) + *z * cos(theta);
+	z_new = *x * -sin(theta) + *z * cos(theta);
 	*x = x_new;
 	*z = z_new;
 }
@@ -28,8 +28,8 @@ void	apply_x_rotation(double *y, double *z, double phi)
 	double y_new;
 	double z_new;
 
-	y_new = *y * cos(phi) - *z * sin(phi);
-	z_new = *y * sin(phi) + *z * cos(phi);
+	y_new = *y * cos(phi) + *z * sin(phi);
+	z_new = *y * -sin(phi) + *z * cos(phi);
 	*y = y_new;
 	*z = z_new;
 }

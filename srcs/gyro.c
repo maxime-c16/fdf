@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 11:12:13 by macauchy          #+#    #+#             */
-/*   Updated: 2025/03/23 20:25:36 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/03/24 10:52:06 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,8 @@ static void	draw_line_c(t_point a, t_point b, int color)
 		current_z = lerp(a.z, b.z, t_param);
 		// translate_mlx_to_gl(a, &a_gl);
 		// ft_gl_pixel_put(_fdf()->gl, a_gl.x, a_gl.y, linear_altitude_color(current_z, fdf->min_altitude, fdf->max_altitude));
-		mlx_pixel_put(fdf->mlx, fdf->win, a.x, a.y, color);
+		// mlx_pixel_put(fdf->mlx, fdf->win, a.x, a.y, color);
+		set_pixel(fdf->img_data, a.x, a.y, current_z);
 		if (a.x == b.x && a.y == b.y)
 			break ;
 		e2 = err;

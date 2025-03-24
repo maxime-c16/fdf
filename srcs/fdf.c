@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 13:54:29 by mcauchy           #+#    #+#             */
-/*   Updated: 2025/03/23 18:54:42 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/03/24 12:12:01 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,24 @@ void	translate_mlx_to_gl(t_point a, t_point *a_gl)
 	a_gl->z = a.z;
 }
 
-void	draw_line(t_point a, t_point b)
+void	set_pixel(char *data, int x, int y, int current_z)
+{
+	t_fdf	*fdf;
+	int	*buf;
+	int	offset;
+	int	color;
+
+	fdf = _fdf();
+	buf = (int *)data;
+	offset = y * WIDTH + x;
+	if (x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT)
+	{
+		color = linear_altitude_color(current_z, fdf->min_altitude, fdf->max_altitude);
+		buf[offset] = color;
+	}
+}
+
+void	draw_line(t_point a, t_point b, char *img_data)
 {
 	t_fdf	*fdf;
 	int		dx;
@@ -101,10 +118,11 @@ void	draw_line(t_point a, t_point b)
 			t_param = 0;
 		else
 			t_param = curr_dist / total_dist;
-		current_z = lerp(a.z, b.z, t_param);
+		current_z = lerp(b.z, a.z, t_param);
 		// translate_mlx_to_gl(a, &a_gl);
 		// ft_gl_pixel_put(_fdf()->gl, a_gl.x, a_gl.y, linear_altitude_color(current_z, fdf->min_altitude, fdf->max_altitude));
-		mlx_pixel_put(fdf->mlx, fdf->win, a.x, a.y, linear_altitude_color(current_z, fdf->min_altitude, fdf->max_altitude));
+		// mlx_pixel_put(fdf->mlx, fdf->win, a.x, a.y, linear_altitude_color(current_z, fdf->min_altitude, fdf->max_altitude));
+		set_pixel(img_data, (int)a.x, (int)a.y, current_z);
 		if (a.x == b.x && a.y == b.y)
 			break ;
 		e2 = err;
@@ -191,10 +209,16 @@ void	draw_map(void)
 
 	i = 0;
 	fdf = _fdf();
-	while (i < fdf->height)
+	fdf->img_data = mlx_get_data_addr(fdf->img, &fdf->bpp, &fdf->size_line, &fdf->endian);
+	ft_bzero(fdf->img_data, fdf->size_line * HEIGHT);
+	if (fdf->camera.rotation_x > 0)
+		i = fdf->height - 1;
+	while (i < fdf->height && i >= 0)
 	{
 		j = 0;
-		while (j < fdf->width)
+		if (fdf->camera.rotation_y > 0)
+			j = fdf->width - 1;
+		while (j < fdf->width && j >= 0)
 		{
 			a = project_point(i, j);
 			gyro_a = project_point_scaled(i, j);
@@ -202,36 +226,38 @@ void	draw_map(void)
 			{
 				b = project_point(i, j + 1);
 				gyro_b = project_point_scaled(i, j + 1);
-				draw_line(a, b);
-				draw_line(gyro_a, gyro_b);
+				draw_line(a, b, fdf->img_data);
+				draw_line(gyro_a, gyro_b, fdf->img_data);
 			}
 			if (i + 1 < fdf->height)
 			{
 				b = project_point(i + 1, j);
 				gyro_b = project_point_scaled(i + 1, j);
-				draw_line(a, b);
-				draw_line(gyro_a, gyro_b);
+				draw_line(a, b, fdf->img_data);
+				draw_line(gyro_a, gyro_b, fdf->img_data);
 			}
-			j++;
+			j += -2 * (fdf->camera.rotation_y > 0) + 1;
 		}
-		i++;
+		i += -2 * (fdf->camera.rotation_x > 0) + 1;
 	}
 	//print projection type mlx_string_put
 
-	mlx_string_put(fdf->mlx, fdf->win, 10, 10, 0xFFFFFF, "Projection type:");
-	if (fdf->proj_style == PROJ_ISOMETRIC)
-		mlx_string_put(fdf->mlx, fdf->win, 10, 30, 0xFFFFFF, "Isometric");
-	else if (fdf->proj_style == PROJ_PERSPECTIVE)
-		mlx_string_put(fdf->mlx, fdf->win, 10, 30, 0xFFFFFF, "Perspective");
-	else if (fdf->proj_style == PROJ_OBLIQUE)
-		mlx_string_put(fdf->mlx, fdf->win, 10, 30, 0xFFFFFF, "Oblique");
-	else if (fdf->proj_style == PROJ_CABINET)
-		mlx_string_put(fdf->mlx, fdf->win, 10, 30, 0xFFFFFF, "Cabinet");
-	else if (fdf->proj_style == PROJ_CONIC)
-		mlx_string_put(fdf->mlx, fdf->win, 10, 30, 0xFFFFFF, "Conic");
-	else
-		mlx_string_put(fdf->mlx, fdf->win, 10, 30, 0xFFFFFF, "Parallel");
 	draw_gyroscope_sphere(fdf);
+	mlx_put_image_to_window(fdf->mlx, fdf->win, fdf->img, 0, 0);
+	// mlx_string_put(fdf->mlx, fdf->win, 10, 10, 0xFFFFFF, "Projection type:");
+	// if (fdf->proj_style == PROJ_ISOMETRIC)
+	// 	mlx_string_put(fdf->mlx, fdf->win, 10, 30, 0xFFFFFF, "Isometric");
+	// else if (fdf->proj_style == PROJ_PERSPECTIVE)
+	// 	mlx_string_put(fdf->mlx, fdf->win, 10, 30, 0xFFFFFF, "Perspective");
+	// else if (fdf->proj_style == PROJ_OBLIQUE)
+	// 	mlx_string_put(fdf->mlx, fdf->win, 10, 30, 0xFFFFFF, "Oblique");
+	// else if (fdf->proj_style == PROJ_CABINET)
+	// 	mlx_string_put(fdf->mlx, fdf->win, 10, 30, 0xFFFFFF, "Cabinet");
+	// else if (fdf->proj_style == PROJ_CONIC)
+	// 	mlx_string_put(fdf->mlx, fdf->win, 10, 30, 0xFFFFFF, "Conic");
+	// else
+	// 	mlx_string_put(fdf->mlx, fdf->win, 10, 30, 0xFFFFFF, "Parallel");
+	// mlx_destroy_image(fdf->mlx, fdf->img);
 }
 
 int	on_close(void)
@@ -302,6 +328,9 @@ int	main(int ac, char **av)
 	draw_map();
 	mlx_hook(fdf->win, 17, 0, on_close, 0);
 	mlx_hook(fdf->win, 2, 0, key_hook, 0);
+	mlx_hook(fdf->win, 4, 0, mouse_press, 0);
+	mlx_hook(fdf->win, 5, 0, mouse_release, 0);
+	mlx_hook(fdf->win, 6, 0, mouse_move, 0);
 	mlx_loop(fdf->mlx);
 	return (0);
 }

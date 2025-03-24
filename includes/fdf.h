@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 14:04:24 by macauchy          #+#    #+#             */
-/*   Updated: 2025/03/23 19:16:53 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/03/24 11:16:41 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@
 # define HEIGHT 600
 
 # define SEG 36
+
+# define SENS_MOUSE 0.005
 
 # define LEFT_ARROW 123
 # define RIGHT_ARROW 124
@@ -76,6 +78,11 @@ typedef struct s_fdf
 {
 	void	*mlx;
 	void	*win;
+	void	*img;
+	char	*img_data;
+	int		bpp;
+	int		size_line;
+	int		endian;
 	int		width;
 	int		height;
 	int		**map;
@@ -86,6 +93,9 @@ typedef struct s_fdf
 	int		min_altitude;
 	int		max_altitude;
 	int		proj_style;
+	int		mouse_pressed;
+	int		mouse_x;
+	int		mouse_y;
 	t_camera	camera;
 	t_gyro	gyro;
 	t_ft_gl	*gl;
@@ -102,13 +112,18 @@ typedef struct s_point
 t_fdf	*_fdf(void);
 int		max(int a, int b);
 void	parsing(char *filename);
+void	draw_map(void);
 t_point	project_point(int i, int j);
 t_point	project_point_scaled(int i, int j);
 void	apply_proj(t_point *point, double x, double y, double z);
+void	set_pixel(char *data, int x, int y, int current_z);
 double	lerp(double a, double b, double t);
 void	draw_gyroscope_sphere(t_fdf *fdf);
 void	apply_y_rotation(double *x, double *z, double theta);
 void	apply_x_rotation(double *y, double *z, double phi);
 void	apply_z_rotation(double *x, double *y, double psi);
+int		mouse_press(int button, int x, int y);
+int		mouse_release(int x, int y);
+int		mouse_move(int x, int y);
 
 #endif
