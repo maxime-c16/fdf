@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 15:22:40 by macauchy          #+#    #+#             */
-/*   Updated: 2025/03/25 13:37:55 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/03/25 14:08:21 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ static int	audio_callback(const void *input, void *output,
 		vol_l = ftmax(vol_l, fabs(in[i]));
 		vol_r = ftmax(vol_r, fabs(in[i + 1]));
 	}
+	audio->volume = (vol_l + vol_r) / 2;
 	printf("\r");
 	for (int i = 0; i < bar_size; i++)
 	{
@@ -217,7 +218,7 @@ int	update_and_draw(void *param)
 	t_fdf	*fdf;
 
 	fdf = (t_fdf *)param;
-	update_map_from_audio(fdf);
+	// update_map_from_audio(fdf);
 	mlx_clear_window(fdf->mlx, fdf->win);
 	draw_map();
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 13:54:29 by mcauchy           #+#    #+#             */
-/*   Updated: 2025/03/25 13:16:23 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/03/25 14:23:32 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -323,11 +323,11 @@ int	main(int ac, char **av)
 		ft_putstr_fd("Usage: ./fdf <filename>\n", 2);
 		return (1);
 	}
-	// parsing(av[1]);
+	parsing(av[1]);
 	fdf = _fdf();
-	// compute_height_factor(fdf);
+	compute_height_factor(fdf);
+	draw_map();
 	start_audio_capture();
-	// draw_map();
 	mlx_hook(fdf->win, 17, 0, on_close, 0);
 	mlx_hook(fdf->win, 2, 0, key_hook, 0);
 	mlx_hook(fdf->win, 4, 0, mouse_press, 0);

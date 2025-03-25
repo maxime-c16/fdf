@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:15:31 by macauchy          #+#    #+#             */
-/*   Updated: 2025/03/24 17:39:26 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/03/25 14:28:08 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,14 +108,14 @@ t_point	project_point(int i, int j)
 	fdf = _fdf();
 	x = j * fdf->camera.zoom - fdf->center_x;
 	y = i * fdf->camera.zoom - fdf->center_y;
-	z = fdf->audio_map->map[i][j] * fdf->camera.height_factor;
+	z = fdf->map[i][j] * (fdf->audio.volume * 100.0);
 	apply_y_rotation(&x, &z, fdf->camera.rotation_y);
 	apply_x_rotation(&y, &z, fdf->camera.rotation_x);
 	apply_z_rotation(&x, &y, fdf->camera.rotation_z);
 	apply_proj(&point, x, y, z);
 	point.x += fdf->camera.x_offset;
 	point.y += fdf->camera.y_offset;
-	point.z = fdf->audio_map->map[i][j];
+	point.z = fdf->map[i][j];
 	return (point);
 }
 

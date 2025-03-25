@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 14:04:24 by macauchy          #+#    #+#             */
-/*   Updated: 2025/03/25 13:05:49 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/03/25 14:04:30 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ typedef struct s_camera
 	double	rotation_y;
 	double	rotation_z;
 	double	height_factor;
+	double	save_height_factor;
 }			t_camera;
 
 typedef struct s_gyro
@@ -86,6 +87,7 @@ typedef struct s_audio
 {
 	PaStream	*stream;
 	float		buffer[AUDIO_BUFFER_SIZE];
+	float		volume;
 }				t_audio;
 
 typedef struct s_map
