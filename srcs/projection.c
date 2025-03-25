@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:15:31 by macauchy          #+#    #+#             */
-/*   Updated: 2025/03/25 14:28:08 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/03/25 14:31:47 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ t_point	project_point(int i, int j)
 	apply_proj(&point, x, y, z);
 	point.x += fdf->camera.x_offset;
 	point.y += fdf->camera.y_offset;
-	point.z = fdf->map[i][j];
+	point.z = z;
 	return (point);
 }
 
