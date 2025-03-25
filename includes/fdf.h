@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 14:04:24 by macauchy          #+#    #+#             */
-/*   Updated: 2025/03/24 11:16:41 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/03/25 13:05:49 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,17 @@
 # include "../libft/libft.h"
 # include <math.h>
 # include <limits.h>
+# include <portaudio.h>
 
 # define WIDTH 800
 # define HEIGHT 600
+
+# define AUDIO_BUFFER_SIZE 512
+
+# define AUDIO_MAP_WIDTH  200
+# define AUDIO_MAP_HEIGHT 50
+# define MAX_HEIGHT_AUDIO 40
+# define SAMPLE_RATE 44100
 
 # define SEG 36
 
@@ -72,7 +80,20 @@ typedef struct s_gyro
 	int		cx;
 	int		cy;
 	double	height_factor;
-}				t_gyro;
+}			t_gyro;
+
+typedef struct s_audio
+{
+	PaStream	*stream;
+	float		buffer[AUDIO_BUFFER_SIZE];
+}				t_audio;
+
+typedef struct s_map
+{
+	int		**map;
+	int		width;
+	int		height;
+}			t_map;
 
 typedef struct s_fdf
 {
@@ -96,6 +117,8 @@ typedef struct s_fdf
 	int		mouse_pressed;
 	int		mouse_x;
 	int		mouse_y;
+	t_audio	audio;
+	t_map		*audio_map;
 	t_camera	camera;
 	t_gyro	gyro;
 	t_ft_gl	*gl;
@@ -125,5 +148,11 @@ void	apply_z_rotation(double *x, double *y, double psi);
 int		mouse_press(int button, int x, int y);
 int		mouse_release(int x, int y);
 int		mouse_move(int x, int y);
+
+void	start_audio_capture(void);
+void	stop_audio_capture(void);
+
+int		update_and_draw(void *param);
+void	update_map_from_audio(t_fdf *fdf);
 
 #endif

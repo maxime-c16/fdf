@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 14:48:10 by macauchy          #+#    #+#             */
-/*   Updated: 2025/03/24 10:47:07 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/03/24 17:43:25 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ t_fdf	*_fdf(void)
 		fdf.gyro.rz = &fdf.camera.rotation_z;
 		fdf.gyro.cx = WIDTH - (int)fdf.gyro.rad - 10;
 		fdf.gyro.cy = (int)fdf.gyro.rad + 10;
+		fdf.audio_map = NULL;
 		init = 1;
 	}
 	return (&fdf);

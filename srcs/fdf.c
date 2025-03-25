@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 13:54:29 by mcauchy           #+#    #+#             */
-/*   Updated: 2025/03/24 12:12:01 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/03/25 13:16:23 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,20 +221,20 @@ void	draw_map(void)
 		while (j < fdf->width && j >= 0)
 		{
 			a = project_point(i, j);
-			gyro_a = project_point_scaled(i, j);
+			// gyro_a = project_point_scaled(i, j);
 			if (j + 1 < fdf->width)
 			{
 				b = project_point(i, j + 1);
-				gyro_b = project_point_scaled(i, j + 1);
+				// gyro_b = project_point_scaled(i, j + 1);
 				draw_line(a, b, fdf->img_data);
-				draw_line(gyro_a, gyro_b, fdf->img_data);
+				// draw_line(gyro_a, gyro_b, fdf->img_data);
 			}
 			if (i + 1 < fdf->height)
 			{
 				b = project_point(i + 1, j);
-				gyro_b = project_point_scaled(i + 1, j);
+				// gyro_b = project_point_scaled(i + 1, j);
 				draw_line(a, b, fdf->img_data);
-				draw_line(gyro_a, gyro_b, fdf->img_data);
+				// draw_line(gyro_a, gyro_b, fdf->img_data);
 			}
 			j += -2 * (fdf->camera.rotation_y > 0) + 1;
 		}
@@ -242,7 +242,7 @@ void	draw_map(void)
 	}
 	//print projection type mlx_string_put
 
-	draw_gyroscope_sphere(fdf);
+	// draw_gyroscope_sphere(fdf);
 	mlx_put_image_to_window(fdf->mlx, fdf->win, fdf->img, 0, 0);
 	// mlx_string_put(fdf->mlx, fdf->win, 10, 10, 0xFFFFFF, "Projection type:");
 	// if (fdf->proj_style == PROJ_ISOMETRIC)
@@ -264,6 +264,7 @@ int	on_close(void)
 {
 	mlx_destroy_window(_fdf()->mlx, _fdf()->win);
 	ft_gl_destroy(_fdf()->gl);
+	stop_audio_capture();
 	exit(0);
 }
 
@@ -309,7 +310,7 @@ int	key_hook(int keycode)
 	}
 	mlx_clear_window(_fdf()->mlx, _fdf()->win);
 	// ft_gl_clear(_fdf()->gl);
-	draw_map();
+	update_and_draw(_fdf());
 	return (0);
 }
 
@@ -322,15 +323,17 @@ int	main(int ac, char **av)
 		ft_putstr_fd("Usage: ./fdf <filename>\n", 2);
 		return (1);
 	}
-	parsing(av[1]);
+	// parsing(av[1]);
 	fdf = _fdf();
-	compute_height_factor(fdf);
-	draw_map();
+	// compute_height_factor(fdf);
+	start_audio_capture();
+	// draw_map();
 	mlx_hook(fdf->win, 17, 0, on_close, 0);
 	mlx_hook(fdf->win, 2, 0, key_hook, 0);
 	mlx_hook(fdf->win, 4, 0, mouse_press, 0);
 	mlx_hook(fdf->win, 5, 0, mouse_release, 0);
 	mlx_hook(fdf->win, 6, 0, mouse_move, 0);
+	mlx_loop_hook(fdf->mlx, update_and_draw, fdf);
 	mlx_loop(fdf->mlx);
 	return (0);
 }

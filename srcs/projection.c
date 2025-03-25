@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:15:31 by macauchy          #+#    #+#             */
-/*   Updated: 2025/03/24 11:39:59 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/03/24 17:39:26 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,14 +108,14 @@ t_point	project_point(int i, int j)
 	fdf = _fdf();
 	x = j * fdf->camera.zoom - fdf->center_x;
 	y = i * fdf->camera.zoom - fdf->center_y;
-	z = fdf->map[i][j] * fdf->camera.height_factor;
+	z = fdf->audio_map->map[i][j] * fdf->camera.height_factor;
 	apply_y_rotation(&x, &z, fdf->camera.rotation_y);
 	apply_x_rotation(&y, &z, fdf->camera.rotation_x);
 	apply_z_rotation(&x, &y, fdf->camera.rotation_z);
 	apply_proj(&point, x, y, z);
 	point.x += fdf->camera.x_offset;
 	point.y += fdf->camera.y_offset;
-	point.z = fdf->map[i][j];
+	point.z = fdf->audio_map->map[i][j];
 	return (point);
 }
 
@@ -130,18 +130,19 @@ t_point	project_point_scaled(int i, int j)
 	double	cz;
 
 	gyro = _fdf()->gyro;
+	_fdf()->max_altitude = MAX_HEIGHT_AUDIO;
 	scale = (gyro.rad) / max(1, _fdf()->max_altitude - _fdf()->min_altitude);
 	x = (j - _fdf()->width / 2.0) * scale;
 	y = (i - _fdf()->height / 2.0) * scale;
 	gyro.height_factor = scale / 4.0;
 	cz = (_fdf()->max_altitude - _fdf()->min_altitude) / 2.0;
-	z = (_fdf()->map[i][j] - cz) * gyro.height_factor;
+	z = (_fdf()->audio_map->map[i][j] - cz) * gyro.height_factor;
 	apply_y_rotation(&x, &z, *(gyro).ry);
 	apply_x_rotation(&y, &z, *(gyro).rx);
 	apply_z_rotation(&x, &y, *(gyro).rz);
 	apply_proj(&point, x, y, z);
 	point.x += gyro.cx;
 	point.y += gyro.cy;
-	point.z = _fdf()->map[i][j];
+	point.z = _fdf()->audio_map->map[i][j];
 	return (point);
 }
