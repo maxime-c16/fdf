@@ -302,6 +302,10 @@ int	key_hook(int keycode)
 		_fdf()->camera.y_offset += 10;
 	if (keycode == UP_ARROW)
 		_fdf()->camera.y_offset -= 10;
+	if (keycode == ADD_DEBUG)
+		_fdf()->debug += 0.1;
+	if (keycode == SUB_DEBUG)
+		_fdf()->debug -= 0.1;
 	if (keycode == ADD_X_ROTATE)
 		_fdf()->camera.rotation_x += 0.1;
 	if (keycode == SUB_X_ROTATE)

@@ -21,6 +21,8 @@
 # include <limits.h>
 # include <portaudio.h>
 # include <fftw3.h>
+# include <string.h>
+# include <strings.h>
 
 # define WIDTH 800
 # define HEIGHT 600
@@ -52,6 +54,8 @@
 # define SUB_Z_ROTATE 12
 # define ADD_ZOOM 69
 # define SUB_ZOOM 78
+# define ADD_DEBUG 92
+# define SUB_DEBUG 67
 # define CH_PROJ 35
 # define ESC 53
 # define RESET 15
@@ -131,6 +135,7 @@ typedef struct s_fdf
 	int		mouse_pressed;
 	int		mouse_x;
 	int		mouse_y;
+	double	debug;
 	t_audio	audio;
 	t_map		*audio_map;
 	t_camera	camera;
@@ -148,6 +153,7 @@ typedef struct s_point
 
 t_fdf	*_fdf(void);
 int		max(int a, int b);
+char	*ft_dtoa(double n, int precision);
 int		ft_clamp(int a, int min, int max);
 void	parsing(char *filename);
 void	draw_map(void);

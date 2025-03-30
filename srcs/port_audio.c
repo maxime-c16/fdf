@@ -294,10 +294,10 @@ t_point	project_spectro_pts(int i, int j)
 	freq_bin = j;
 	freq_scale = fabs(fdf->audio.fft_out[j]) * 10.0;
 	ratio = (double)freq_bin / (double)(AUDIO_BUFFER_SIZE / 2.0);
-	freq_scale = pow(freq_scale, (double)(0.75 + (1.2 - 0.75) * ratio));
+	freq_scale = pow(freq_scale, (double)(0.6 + (1.2 - 0.6) * ratio));
 	z = (fdf->audio.fft_out[freq_bin] > 0.0) ? freq_scale : -freq_scale;
 	z *= (fdf->audio.volume * 5.0);
-	z = ft_dclamp(z, -MAX_HEIGHT_AUDIO, MAX_HEIGHT_AUDIO);
+	// z = ft_dclamp(z, -MAX_HEIGHT_AUDIO, MAX_HEIGHT_AUDIO);
 	apply_y_rotation(&x, &z, fdf->camera.rotation_y);
 	apply_x_rotation(&y, &z, fdf->camera.rotation_x);
 	apply_z_rotation(&x, &y, fdf->camera.rotation_z);
@@ -345,5 +345,13 @@ void	draw_music_map(void)
 		i += -2 * (fdf->camera.rotation_x > 0) + 1;
 	}
 	mlx_put_image_to_window(fdf->mlx, fdf->win, fdf->img, 0, 0);
+	//debug
+	if (fdf->debug > 0.0)
+	{
+		mlx_string_put(fdf->mlx, fdf->win, 10, 10, 0xFFFFFF, "debug: ");
+		mlx_string_put(fdf->mlx, fdf->win, 70, 10, 0xFFFFFF, ft_dtoa(fdf->debug, 2));
+		mlx_string_put(fdf->mlx, fdf->win, 10, 30, 0xFFFFFF, "volume: ");
+		mlx_string_put(fdf->mlx, fdf->win, 80, 30, 0xFFFFFF, ft_dtoa(fdf->audio.volume, 2));
+	}
 }
 
