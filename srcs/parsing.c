@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 11:40:36 by macauchy          #+#    #+#             */
-/*   Updated: 2025/03/25 14:20:47 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/03/25 14:43:10 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ static void	insert_values(char *line, int i)
 {
 	t_fdf	*fdf;
 	char	**split;
+	int		width;
 	int		j;
 
 	j = 0;
@@ -66,12 +67,22 @@ static void	insert_values(char *line, int i)
 		exit(1);
 	}
 	while (split[j])
+		j++;
+	width = j;
+	fdf->map[i] = (int *)malloc(sizeof(int) * width + 1);
+	if (!fdf->map[i])
+	{
+		ft_putstr_fd("Error: malloc() failed\n", 2);
+		exit(1);
+	}
+	j = 0;
+	while (j < width)
 	{
 		fdf->map[i][j] = ft_atoi(split[j]);
 		free(split[j]);
 		j++;
 	}
-	fdf->width = j;
+	fdf->width = width;
 	free(split);
 }
 
@@ -90,12 +101,6 @@ static void	read_from_fd(int fd)
 	}
 	while (line)
 	{
-		_fdf()->map[i] = (int *)malloc(sizeof(int) * _fdf()->width);
-		if (!_fdf()->map[i])
-		{
-			ft_putstr_fd("Error: malloc() failed\n", 2);
-			exit(1);
-		}
 		insert_values(line, i);
 		i++;
 		free(line);
@@ -120,5 +125,4 @@ void	parsing(char *filename)
 	fdf->camera.zoom = HEIGHT  / max(1, fdf->width);
 	fdf->center_x = ((fdf->width - 1) * fdf->camera.zoom) / 2.0;
 	fdf->center_y = ((fdf->height - 1) * fdf->camera.zoom) / 2.0;
-	print_map();
 }

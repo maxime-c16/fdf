@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 14:04:24 by macauchy          #+#    #+#             */
-/*   Updated: 2025/03/25 14:04:30 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/03/25 16:42:20 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <math.h>
 # include <limits.h>
 # include <portaudio.h>
+# include <fftw3.h>
 
 # define WIDTH 800
 # define HEIGHT 600
@@ -28,8 +29,12 @@
 
 # define AUDIO_MAP_WIDTH  200
 # define AUDIO_MAP_HEIGHT 50
-# define MAX_HEIGHT_AUDIO 40
-# define SAMPLE_RATE 44100
+# define MAX_HEIGHT_AUDIO 250
+# define SAMPLE_RATE 44100.0
+
+# define SPECTRO_FREQ_START 20
+# define SPECTRO_FREQ_END 20000
+# define SPECTRO_HEIGHT	5
 
 # define SEG 36
 
@@ -60,7 +65,7 @@
 
 typedef struct s_camera
 {
-	int		zoom;
+	double		zoom;
 	int		x_offset;
 	int		y_offset;
 	double	rotation_x;
@@ -85,9 +90,16 @@ typedef struct s_gyro
 
 typedef struct s_audio
 {
-	PaStream	*stream;
-	float		buffer[AUDIO_BUFFER_SIZE];
-	float		volume;
+	PaStream		*stream;
+	float			buffer[AUDIO_BUFFER_SIZE];
+	float			volume;
+	double			*fft_in;
+	double			*fft_out;
+	fftw_plan		fft_plan;
+	double			*freq;
+	int				channel_count;
+	int				start_index;
+	int				spectro_size;
 }				t_audio;
 
 typedef struct s_map
@@ -136,6 +148,7 @@ typedef struct s_point
 
 t_fdf	*_fdf(void);
 int		max(int a, int b);
+int		ft_clamp(int a, int min, int max);
 void	parsing(char *filename);
 void	draw_map(void);
 t_point	project_point(int i, int j);
@@ -150,11 +163,13 @@ void	apply_z_rotation(double *x, double *y, double psi);
 int		mouse_press(int button, int x, int y);
 int		mouse_release(int x, int y);
 int		mouse_move(int x, int y);
-
 void	start_audio_capture(void);
 void	stop_audio_capture(void);
 
 int		update_and_draw(void *param);
 void	update_map_from_audio(t_fdf *fdf);
+
+void	draw_line(t_point a, t_point b, char *img_data);
+void	draw_music_map(void);
 
 #endif

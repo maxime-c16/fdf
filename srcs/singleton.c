@@ -34,7 +34,7 @@ t_fdf	*_fdf(void)
 			exit(1);
 		}
 		fdf.img = mlx_new_image(fdf.mlx, WIDTH, HEIGHT);
-		fdf.camera.zoom = (WIDTH + HEIGHT) / 40;
+		fdf.camera.zoom = WIDTH / (AUDIO_BUFFER_SIZE);
 		fdf.camera.x_offset = WIDTH / 2;
 		fdf.camera.y_offset = HEIGHT / 2;
 		fdf.gyro.rad = (double)WIDTH / 20.0;

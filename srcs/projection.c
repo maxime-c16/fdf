@@ -6,11 +6,16 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:15:31 by macauchy          #+#    #+#             */
-/*   Updated: 2025/03/25 14:31:47 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/03/25 16:46:53 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/fdf.h"
+
+int	ft_clamp(int a, int min, int max)
+{
+	return (a < min ? min : (a > max ? max : a));
+}
 
 void	apply_y_rotation(double *x, double *z, double theta)
 {
@@ -88,8 +93,6 @@ void	apply_proj(t_point *point, double x, double y, double z)
 		apply_oblique_projection(point, x, y, z);
 	else if (fdf->proj_style == PROJ_CABINET)
 		apply_cabinet_projection(point, x, y, z);
-	else if (fdf->proj_style == PROJ_CONIC)
-		apply_conic_projection(point, x, y, z);
 	else
 	{
 		point->x = x;
@@ -104,18 +107,30 @@ t_point	project_point(int i, int j)
 	double	x;
 	double	y;
 	double	z;
+	int		freq_bin;
+	double	freq_scale;
 
 	fdf = _fdf();
 	x = j * fdf->camera.zoom - fdf->center_x;
 	y = i * fdf->camera.zoom - fdf->center_y;
-	z = fdf->map[i][j] * (fdf->audio.volume * 100.0);
+	freq_bin = (j * (AUDIO_BUFFER_SIZE / 2)) / fdf->width;
+	freq_bin = ft_clamp(freq_bin, 0, AUDIO_BUFFER_SIZE / 2);
+	freq_scale = fdf->audio.fft_out[freq_bin] * 10.0;
+	if (freq_bin < SPECTRO_FREQ_START)
+		freq_scale *= (double)freq_bin / SPECTRO_FREQ_START;
+	else if (freq_bin > SPECTRO_FREQ_END)
+		freq_scale *= (double)(AUDIO_BUFFER_SIZE / 2 - freq_bin)
+			/ (AUDIO_BUFFER_SIZE / 2 - SPECTRO_FREQ_END);
+	z = fdf->map[i][j] + freq_scale;
+	z *= (fdf->audio.volume * 5.0);
+	z = ft_clamp(z, -MAX_HEIGHT_AUDIO, MAX_HEIGHT_AUDIO);
 	apply_y_rotation(&x, &z, fdf->camera.rotation_y);
 	apply_x_rotation(&y, &z, fdf->camera.rotation_x);
 	apply_z_rotation(&x, &y, fdf->camera.rotation_z);
 	apply_proj(&point, x, y, z);
 	point.x += fdf->camera.x_offset;
 	point.y += fdf->camera.y_offset;
-	point.z = z;
+	point.z = fdf->map[i][j];
 	return (point);
 }
 
@@ -136,13 +151,13 @@ t_point	project_point_scaled(int i, int j)
 	y = (i - _fdf()->height / 2.0) * scale;
 	gyro.height_factor = scale / 4.0;
 	cz = (_fdf()->max_altitude - _fdf()->min_altitude) / 2.0;
-	z = (_fdf()->audio_map->map[i][j] - cz) * gyro.height_factor;
+	z = (_fdf()->map[i][j] - cz) * gyro.height_factor;
 	apply_y_rotation(&x, &z, *(gyro).ry);
 	apply_x_rotation(&y, &z, *(gyro).rx);
 	apply_z_rotation(&x, &y, *(gyro).rz);
 	apply_proj(&point, x, y, z);
 	point.x += gyro.cx;
 	point.y += gyro.cy;
-	point.z = _fdf()->audio_map->map[i][j];
+	point.z = _fdf()->map[i][j];
 	return (point);
 }

@@ -19,21 +19,22 @@ OBJS	=	$(addprefix $(OBJ_DIR)/, $(FILES:.c=.o))
 NAME	=	fdf
 CC		=	gcc
 CFLAGS	=	-g3
-DEBUG	=	-fsanitize=address
+HEADER	=	includes/fdf.h
+DEBUG	=	-fsanitize=address -fno-omit-frame-pointer
 RM		=	/bin/rm -rf
 LDFLAGS	=	-Llibft -lft -Lmlx -lmlx -lft_gl -Lft_gl -framework OpenGL \
-			-framework AppKit -fsanitize=address -lportaudio
+			-framework AppKit -lportaudio -lfftw3 -lm
 
 all:		$(NAME)
 
 $(NAME):	make_libs $(OBJS)
-		@$(CC) $(CFLAGS) $(OBJS) $(LDFLAGS) -o $(NAME)
+		@$(CC) $(CFLAGS) $(OBJS) $(LDFLAGS) $(DEBUG) -o $(NAME)
 		@echo "Usage: ./$(NAME) <map>.fdf"
 
-$(OBJ_DIR)/%.o:	$(SRC_DIR)/%.c
+$(OBJ_DIR)/%.o:	$(SRC_DIR)/%.c $(HEADER)
 		@echo "Compiling $<"
 		@mkdir -p $(OBJ_DIR)
-		@$(CC) $(CFLAGS) -c $< -o $@
+		@$(CC) $(CFLAGS) $(DEBUG) -c $< -o $@
 
 debug:		$(OBJS)
 		$(MAKE) -C libft -j > /dev/null 2>&1

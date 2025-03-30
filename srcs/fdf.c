@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 13:54:29 by mcauchy           #+#    #+#             */
-/*   Updated: 2025/03/25 14:33:52 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/03/25 17:00:20 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,9 @@ int linear_altitude_color(int altitude, int min_alt, int max_alt)
 	int end_color;
 
 	t = (max_alt == min_alt) ? 0.0 : ((double)(altitude - min_alt)) /\
-		 (max_alt - min_alt);
+		 (double)(max_alt - min_alt);
+	// start_color = 0xF00A1F;
+	// end_color = 0x0FF00F;
 	start_color = 0xF0AAFF;
 	end_color = 0x0000FF;
 	return (interpolate_color(start_color, end_color, t));
@@ -82,7 +84,7 @@ void	set_pixel(char *data, int x, int y, int current_z)
 	offset = y * WIDTH + x;
 	if (x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT)
 	{
-		color = linear_altitude_color(current_z, 0, 100);
+		color = linear_altitude_color(current_z, -MAX_HEIGHT_AUDIO / 2, MAX_HEIGHT_AUDIO / 2);
 		buf[offset] = color;
 	}
 }
@@ -152,23 +154,25 @@ void compute_height_factor(t_fdf *fdf)
 	int	j;
 
 	i = 0;
-	fdf->min_altitude = INT_MAX;
-	fdf->max_altitude = INT_MIN;
-	while (i < fdf->height)
-	{
-		j = 0;
-		while (j < fdf->width)
-		{
-			if (fdf->map[i][j] < fdf->min_altitude)
-				fdf->min_altitude = fdf->map[i][j];
-			if (fdf->map[i][j] > fdf->max_altitude)
-				fdf->max_altitude = fdf->map[i][j];
-			j++;
-		}
-		i++;
-	}
+	fdf->min_altitude = -MAX_HEIGHT_AUDIO;
+	fdf->max_altitude = MAX_HEIGHT_AUDIO;
+	// while (i < fdf->height)
+	// {
+	// 	j = 0;
+	// 	while (j < fdf->width)
+	// 	{
+	// 		if (fdf->map[i][j] < fdf->min_altitude)
+	// 			fdf->min_altitude = fdf->map[i][j];
+	// 		if (fdf->map[i][j] > fdf->max_altitude)
+	// 			fdf->max_altitude = fdf->map[i][j];
+	// 		j++;
+	// 	}
+	// 	i++;
+	// }
 	fdf->camera.height_factor = ((double)fdf->camera.zoom
-	/ max(1, fdf->max_altitude - fdf->min_altitude)) * 2.0;
+	/ max(1, MAX_HEIGHT_AUDIO)) * 2.0;
+	// fdf->camera.height_factor = (fdf->max_altitude - fdf->min_altitude)
+	// 	/ ((double)max(fdf->width, fdf->height) * 5.0);
 }
 
 char	*ft_dtoa(double n, int precision)
@@ -260,11 +264,29 @@ void	draw_map(void)
 	// mlx_destroy_image(fdf->mlx, fdf->img);
 }
 
+void	free_fdf(void)
+{
+	t_fdf	*fdf;
+	int		i;
+
+	fdf = _fdf();
+	i = 0;
+	while (i < fdf->height)
+	{
+		free(fdf->map[i]);
+		i++;
+	}
+	free(fdf->map);
+	free(fdf->audio.fft_in);
+	free(fdf->audio.fft_out);
+}
+
 int	on_close(void)
 {
 	mlx_destroy_window(_fdf()->mlx, _fdf()->win);
 	ft_gl_destroy(_fdf()->gl);
 	stop_audio_capture();
+	free_fdf();
 	exit(0);
 }
 
@@ -293,11 +315,11 @@ int	key_hook(int keycode)
 	if (keycode == SUB_Z_ROTATE)
 		_fdf()->camera.rotation_z -= 0.1;
 	if (keycode == ADD_ZOOM)
-		_fdf()->camera.zoom += 1;
+		_fdf()->camera.zoom += _fdf()->camera.zoom * 0.3;
 	if (keycode == SUB_ZOOM)
-		_fdf()->camera.zoom -= 1;
+		_fdf()->camera.zoom -= _fdf()->camera.zoom * 0.3;
 	if (keycode == CH_PROJ)
-		_fdf()->proj_style = (_fdf()->proj_style + 1) % 6;
+		_fdf()->proj_style = (_fdf()->proj_style + 1) % 5;
 	if (keycode == RESET)
 	{
 		_fdf()->camera.zoom = (WIDTH + HEIGHT) / 40;
@@ -323,11 +345,13 @@ int	main(int ac, char **av)
 		ft_putstr_fd("Usage: ./fdf <filename>\n", 2);
 		return (1);
 	}
-	parsing(av[1]);
+	// parsing(av[1]);
 	fdf = _fdf();
+	fdf->center_x = BUFFER_SIZE / 2;
+	fdf->center_y = BUFFER_SIZE / 2;
 	compute_height_factor(fdf);
-	draw_map();
 	start_audio_capture();
+	draw_music_map();
 	mlx_hook(fdf->win, 17, 0, on_close, 0);
 	mlx_hook(fdf->win, 2, 0, key_hook, 0);
 	mlx_hook(fdf->win, 4, 0, mouse_press, 0);
