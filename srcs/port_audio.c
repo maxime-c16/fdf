@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 15:22:40 by macauchy          #+#    #+#             */
-/*   Updated: 2025/03/25 14:42:52 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/04/02 15:01:15 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,31 +58,31 @@ static int	audio_callback(const void *input, void *output,
 	}
 	audio->volume = (vol_l + vol_r) / 2;
 	fftw_execute(audio->fft_plan);
-	printf("\r");
-	for (int i = 0; i < bar_size; i++)
-	{
-		double	ratio = pow(i / (double)bar_size, 4);
-		double	freq = audio->fft_out[(int)(audio->start_index + ratio * audio->spectro_size)];
+	// printf("\r");
+	// for (int i = 0; i < bar_size; i++)
+	// {
+	// 	double	ratio = pow(i / (double)bar_size, 4);
+	// 	double	freq = audio->fft_out[(int)(audio->start_index + ratio * audio->spectro_size)];
 
-		if (freq < 0.125) {
-			printf("▁");
-		} else if (freq < 0.25) {
-			printf("▂");
-		} else if (freq < 0.375) {
-			printf("▃");
-		} else if (freq < 0.5) {
-			printf("▄");
-		} else if (freq < 0.625) {
-			printf("▅");
-		} else if (freq < 0.75) {
-			printf("▆");
-		} else if (freq < 0.875) {
-			printf("▇");
-		} else {
-			printf("█");
-		}
-	}
-	fflush(stdout);
+	// 	if (freq < 0.125) {
+	// 		printf("▁");
+	// 	} else if (freq < 0.25) {
+	// 		printf("▂");
+	// 	} else if (freq < 0.375) {
+	// 		printf("▃");
+	// 	} else if (freq < 0.5) {
+	// 		printf("▄");
+	// 	} else if (freq < 0.625) {
+	// 		printf("▅");
+	// 	} else if (freq < 0.75) {
+	// 		printf("▆");
+	// 	} else if (freq < 0.875) {
+	// 		printf("▇");
+	// 	} else {
+	// 		printf("█");
+	// 	}
+	// }
+	// fflush(stdout);
 	return (paContinue);
 }
 
@@ -252,6 +252,14 @@ void	update_map_from_audio(t_fdf *fdf)
 	fdf->height = AUDIO_MAP_HEIGHT;
 }
 
+static double	get_current_time(void)
+{
+	struct timeval	tv;
+
+	gettimeofday(&tv, NULL);
+	return ((double)tv.tv_sec + tv.tv_usec / 1000000.0);
+}
+
 int	update_and_draw(void *param)
 {
 	t_fdf	*fdf;
@@ -260,6 +268,7 @@ int	update_and_draw(void *param)
 	// update_map_from_audio(fdf);
 	mlx_clear_window(fdf->mlx, fdf->win);
 	draw_music_map();
+	update_bpm(fdf, get_current_time());
 	// draw_map();
 	return (0);
 }
@@ -285,6 +294,9 @@ t_point	project_spectro_pts(int i, int j)
 	double	center_x;
 	double	center_y;
 	double	ratio;
+	double	pulse_amp;
+	double	pulse;
+	double	beat_period;
 
 	fdf = _fdf();
 	center_x = ((AUDIO_BUFFER_SIZE / 2.0) * fdf->camera.zoom) / 2.0;
@@ -296,8 +308,21 @@ t_point	project_spectro_pts(int i, int j)
 	ratio = (double)freq_bin / (double)(AUDIO_BUFFER_SIZE / 2.0);
 	freq_scale = pow(freq_scale, (double)(0.6 + (1.2 - 0.6) * ratio));
 	z = (fdf->audio.fft_out[freq_bin] > 0.0) ? freq_scale : -freq_scale;
-	z *= (fdf->audio.volume * 5.0);
+	z *= (fdf->audio.volume * (20.0 * (1.0 - fdf->audio.volume / 2.0)));
 	// z = ft_dclamp(z, -MAX_HEIGHT_AUDIO, MAX_HEIGHT_AUDIO);
+	pulse_amp = 0.2;  // modulation amplitude (15% of z, adjust as needed)
+	if (fdf->bpm_data.bpm > 0.0)
+	{
+		beat_period = 60.0 / fdf->bpm_data.bpm;  // seconds per beat
+		/* You might want to use current time modulo beat period to get a phase.
+		   Here we assume a function get_current_time() returns seconds. */
+		pulse = sin(2 * M_PI * fmod(get_current_time(), beat_period) / beat_period);
+		/* Modulate z by a small amount: add a fraction of z (or a constant offset) */
+		z *= (1.0 + pulse_amp * pulse);
+		fdf->camera.rotation_y += 0.0000002 * (1.0 + pulse_amp * pulse);
+		fdf->camera.rotation_x += 0.0000002 * (1.0 + pulse_amp * pulse);
+		fdf->camera.rotation_z += 0.0000002 * (1.0 + pulse_amp * pulse);
+	}
 	apply_y_rotation(&x, &z, fdf->camera.rotation_y);
 	apply_x_rotation(&y, &z, fdf->camera.rotation_x);
 	apply_z_rotation(&x, &y, fdf->camera.rotation_z);
@@ -346,12 +371,14 @@ void	draw_music_map(void)
 	}
 	mlx_put_image_to_window(fdf->mlx, fdf->win, fdf->img, 0, 0);
 	//debug
-	if (fdf->debug > 0.0)
+	if (fdf->debug)
 	{
 		mlx_string_put(fdf->mlx, fdf->win, 10, 10, 0xFFFFFF, "debug: ");
 		mlx_string_put(fdf->mlx, fdf->win, 70, 10, 0xFFFFFF, ft_dtoa(fdf->debug, 2));
 		mlx_string_put(fdf->mlx, fdf->win, 10, 30, 0xFFFFFF, "volume: ");
 		mlx_string_put(fdf->mlx, fdf->win, 80, 30, 0xFFFFFF, ft_dtoa(fdf->audio.volume, 2));
+		mlx_string_put(fdf->mlx, fdf->win, 10, 50, 0xFFFFFF, "bpm: ");
+		mlx_string_put(fdf->mlx, fdf->win, 50, 50, 0xFFFFFF, ft_dtoa(fdf->bpm_data.bpm, 2));
 	}
 }
 

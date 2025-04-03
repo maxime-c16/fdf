@@ -6,11 +6,12 @@
 #    By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/18 14:49:38 by macauchy          #+#    #+#              #
-#    Updated: 2025/03/24 15:22:36 by macauchy         ###   ########.fr        #
+#    Updated: 2025/03/30 19:22:03 by macauchy         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-FILES	=	fdf.c singleton.c parsing.c projection.c gyro.c hooks.c port_audio.c
+FILES	=	fdf.c singleton.c parsing.c projection.c gyro.c hooks.c port_audio.c \
+			bpm.c
 SRC_DIR	=	srcs
 SRCS	=	$(addprefix $(SRC_DIR)/, $(FILES))
 OBJ_DIR	=	.objs

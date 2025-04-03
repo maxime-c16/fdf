@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 14:04:24 by macauchy          #+#    #+#             */
-/*   Updated: 2025/03/25 16:42:20 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/04/02 13:59:42 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 # include <fftw3.h>
 # include <string.h>
 # include <strings.h>
+# include <sys/time.h>
 
 # define WIDTH 800
 # define HEIGHT 600
@@ -37,6 +38,10 @@
 # define SPECTRO_FREQ_START 20
 # define SPECTRO_FREQ_END 20000
 # define SPECTRO_HEIGHT	5
+
+# define FLUX_BUFFER_SIZE 512
+# define BEAT_WINDOW_SEC 4
+# define EFFECTIVE_FREQ_RANGE 5.0
 
 # define SEG 36
 
@@ -66,6 +71,19 @@
 # define PROJ_OBLIQUE 3
 # define PROJ_CABINET 4
 # define PROJ_CONIC 5
+
+typedef struct s_bpm
+{
+	double		bpm;
+	double		flux_prev[AUDIO_BUFFER_SIZE / 2 + 1];
+	double		flux_history[FLUX_BUFFER_SIZE];
+	int			index_history;
+	double		last_beat_time;
+	double		beat_intervals[FLUX_BUFFER_SIZE];
+	int			beat_count;
+	double		smooth_flux;
+	double		last_update;
+}				t_bpm;
 
 typedef struct s_camera
 {
@@ -141,6 +159,7 @@ typedef struct s_fdf
 	t_camera	camera;
 	t_gyro	gyro;
 	t_ft_gl	*gl;
+	t_bpm		bpm_data;
 }			t_fdf;
 
 typedef struct s_point
@@ -177,5 +196,7 @@ void	update_map_from_audio(t_fdf *fdf);
 
 void	draw_line(t_point a, t_point b, char *img_data);
 void	draw_music_map(void);
+
+void	update_bpm(t_fdf *fdf, double current_time);
 
 #endif

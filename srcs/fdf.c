@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 13:54:29 by mcauchy           #+#    #+#             */
-/*   Updated: 2025/03/25 17:00:20 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/03/30 22:05:47 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -333,6 +333,11 @@ int	key_hook(int keycode)
 		_fdf()->camera.rotation_y = 0.0;
 		_fdf()->camera.rotation_z = 0.0;
 		_fdf()->proj_style = PROJ_ISOMETRIC;
+		_fdf()->debug = 0.0;
+		_fdf()->bpm_data.index_history = 0;
+		_fdf()->bpm_data.beat_count = 0;
+		_fdf()->bpm_data.last_beat_time = 0;
+		_fdf()->bpm_data.bpm = 0;
 	}
 	mlx_clear_window(_fdf()->mlx, _fdf()->win);
 	// ft_gl_clear(_fdf()->gl);
@@ -353,6 +358,7 @@ int	main(int ac, char **av)
 	fdf = _fdf();
 	fdf->center_x = BUFFER_SIZE / 2;
 	fdf->center_y = BUFFER_SIZE / 2;
+	fdf->bpm_data.last_beat_time = 0;
 	compute_height_factor(fdf);
 	start_audio_capture();
 	draw_music_map();
