@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 14:48:10 by macauchy          #+#    #+#             */
-/*   Updated: 2025/03/24 10:47:07 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/05/15 14:56:09 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ t_fdf	*_fdf(void)
 	if (!init)
 	{
 		ft_bzero(&fdf, sizeof(t_fdf));
-		fdf.gl = ft_gl_init();
 		fdf.mlx = mlx_init();
 		if (!fdf.mlx)
 		{

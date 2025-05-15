@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 14:04:24 by macauchy          #+#    #+#             */
-/*   Updated: 2025/03/24 11:16:41 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/05/15 15:06:50 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 # define FDF_H
 
 # include "../mlx/mlx.h"
-# include "../ft_gl/include/libft_gl.h"
 # include "../libft/libft.h"
 # include <math.h>
 # include <limits.h>
@@ -27,10 +26,43 @@
 
 # define SENS_MOUSE 0.005
 
-# define LEFT_ARROW 123
-# define RIGHT_ARROW 124
-# define DOWN_ARROW 125
-# define UP_ARROW 126
+# ifndef M_PI
+#  define M_PI 3.141592653
+# endif
+
+# ifdef __linux__
+#  define ESC 65307
+#  define W 119
+#  define A 97
+#  define S 115
+#  define D 100
+#  define E 101
+#  define R 114
+#  define LEFT 65361
+#  define RIGHT 65363
+
+# elif __APPLE__
+#  define KEY_ESC 53
+#  define W 13
+#  define E 14
+#  define R 15
+#  define A 0
+#  define S 1
+#  define D 2
+#  define LEFT 123
+#  define RIGHT 124
+
+# endif
+
+# define UP_ARROW 	65362
+# define DOWN_ARROW 65364
+# define LEFT_ARROW 65361
+# define RIGHT_ARROW 65363
+
+// # define LEFT_ARROW 123
+// # define RIGHT_ARROW 124
+// # define DOWN_ARROW 125
+// # define UP_ARROW 126
 # define ADD_X_ROTATE 13
 # define SUB_X_ROTATE 1
 # define ADD_Y_ROTATE 0
@@ -40,7 +72,7 @@
 # define ADD_ZOOM 69
 # define SUB_ZOOM 78
 # define CH_PROJ 35
-# define ESC 53
+# define ESC 65307
 # define RESET 15
 
 # define PROJ_ISOMETRIC 0
@@ -49,6 +81,14 @@
 # define PROJ_OBLIQUE 3
 # define PROJ_CABINET 4
 # define PROJ_CONIC 5
+
+# define ON_KEYDOWN 2
+# define ON_KEYUP 3
+# define ON_MOUSEDOWN 4
+# define ON_MOUSEUP 5
+# define ON_MOUSEMOVE 6
+# define ON_EXPOSE 12
+# define ON_DESTROY 17
 
 typedef struct s_camera
 {
@@ -98,7 +138,6 @@ typedef struct s_fdf
 	int		mouse_y;
 	t_camera	camera;
 	t_gyro	gyro;
-	t_ft_gl	*gl;
 }			t_fdf;
 
 typedef struct s_point

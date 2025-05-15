@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 13:54:29 by mcauchy           #+#    #+#             */
-/*   Updated: 2025/03/24 12:12:01 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/05/15 15:07:25 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,22 +52,6 @@ int linear_altitude_color(int altitude, int min_alt, int max_alt)
 	start_color = 0xF0AAFF;
 	end_color = 0x0000FF;
 	return (interpolate_color(start_color, end_color, t));
-}
-
-void	translate_mlx_to_gl(t_point a, t_point *a_gl)
-{
-	t_fdf	*fdf;
-	t_ft_gl	*gl;
-	double	scale_x;
-	double	scale_y;
-
-	fdf = _fdf();
-	gl = fdf->gl;
-	scale_x = (double)gl->width / (double)WIDTH;
-	scale_y = (double)gl->height / (double)HEIGHT;
-	a_gl->x = a.x * scale_x;
-	a_gl->y = a.y * scale_y;
-	a_gl->z = a.z;
 }
 
 void	set_pixel(char *data, int x, int y, int current_z)
@@ -263,7 +247,6 @@ void	draw_map(void)
 int	on_close(void)
 {
 	mlx_destroy_window(_fdf()->mlx, _fdf()->win);
-	ft_gl_destroy(_fdf()->gl);
 	exit(0);
 }
 
@@ -308,7 +291,6 @@ int	key_hook(int keycode)
 		_fdf()->proj_style = PROJ_ISOMETRIC;
 	}
 	mlx_clear_window(_fdf()->mlx, _fdf()->win);
-	// ft_gl_clear(_fdf()->gl);
 	draw_map();
 	return (0);
 }
@@ -327,8 +309,8 @@ int	main(int ac, char **av)
 	compute_height_factor(fdf);
 	draw_map();
 	mlx_hook(fdf->win, 17, 0, on_close, 0);
-	mlx_hook(fdf->win, 2, 0, key_hook, 0);
-	mlx_hook(fdf->win, 4, 0, mouse_press, 0);
+	mlx_hook(fdf->win, ON_KEYDOWN, 1L << 0, key_hook, 0);
+	mlx_hook(fdf->win, 4, 1L << 0, mouse_press, 0);
 	mlx_hook(fdf->win, 5, 0, mouse_release, 0);
 	mlx_hook(fdf->win, 6, 0, mouse_move, 0);
 	mlx_loop(fdf->mlx);

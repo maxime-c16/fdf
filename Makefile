@@ -6,7 +6,7 @@
 #    By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/18 14:49:38 by macauchy          #+#    #+#              #
-#    Updated: 2025/03/24 10:54:53 by macauchy         ###   ########.fr        #
+#    Updated: 2025/05/15 15:21:32 by macauchy         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,8 @@ CC		=	gcc
 CFLAGS	=	-g3
 DEBUG	=	-fsanitize=address
 RM		=	/bin/rm -rf
-LDFLAGS	=	 -Llibft -lft -Lmlx -lmlx -lft_gl -Lft_gl -framework OpenGL -framework AppKit -fsanitize=address
+#LDFLAGS	=	 -Llibft -lft -Lmlx -lmlx -lft_gl -Lft_gl -framework OpenGL -framework AppKit -fsanitize=address
+LDFLAGS	=	-Llibft -lft -Lmlx -lmlx -lX11 -lXext -lm
 
 all:		$(NAME)
 

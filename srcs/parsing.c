@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 11:40:36 by macauchy          #+#    #+#             */
-/*   Updated: 2025/03/23 20:22:27 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/05/15 15:27:53 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,8 @@ static void	read_from_fd(int fd)
 
 	i = 0;
 	line = get_next_line(fd);
+	printf("height: %d\n", _fdf()->height);
+	printf("width: %d\n", _fdf()->width);
 	_fdf()->map = (int **)malloc(sizeof(int *) * _fdf()->height);
 	if (!_fdf()->map)
 	{
