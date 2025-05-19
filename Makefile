@@ -6,13 +6,14 @@
 #    By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/18 14:49:38 by macauchy          #+#    #+#              #
-#    Updated: 2025/05/19 13:58:14 by macauchy         ###   ########.fr        #
+#    Updated: 2025/05/19 15:36:26 by macauchy         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-FILES	=	fdf.c singleton.c parsing.c projection.c hooks.c free.c \
-			color_utils.c draw_map.c event_handlers.c line_utils.c pixel_utils.c \
-			gyro_draw.c gyro_line.c gyro_point.c
+FILES	=	fdf.c singleton.c parsing.c projection.c hooks.c free.c					\
+			color_utils.c draw_map.c event_handlers.c line_utils.c pixel_utils.c	\
+			gyro_draw.c gyro_line.c gyro_point.c parsing_map.c parsing_utils.c		\
+			parsing_print.c
 SRC_DIR	=	srcs
 SRCS	=	$(addprefix $(SRC_DIR)/, $(FILES))
 OBJ_DIR	=	.objs

@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 14:04:24 by macauchy          #+#    #+#             */
-/*   Updated: 2025/05/19 14:00:33 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/05/19 15:06:26 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,5 +197,7 @@ void	draw_line_c(t_point a, t_point b, int color);
 void	get_gyro_point(t_gyro *g, int *px, int *py);
 void	draw_colored_line(t_fdf *fdf, int *curr, int *v, char axis);
 void	draw_gyroscope_sphere(t_fdf *fdf);
+void	count_lines(char *filename);
+void	read_from_fd(int fd);
 
 #endif
