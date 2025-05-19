@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 14:04:24 by macauchy          #+#    #+#             */
-/*   Updated: 2025/05/19 12:46:15 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/05/19 14:00:33 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,6 +156,15 @@ typedef struct s_drawmap_ctx
 	int		j;
 }				t_drawmap_ctx;
 
+typedef struct s_bresenham
+{
+	int	dx;
+	int	dy;
+	int	sx;
+	int	sy;
+	int	err;
+}				t_bresenham;
+
 t_fdf	*_fdf(void);
 int		max(int a, int b);
 void	parsing(char *filename);
@@ -174,5 +183,19 @@ int		mouse_release(int x, int y);
 int		mouse_move(int x, int y);
 void	ft_free_tab(char **tab);
 void	ft_free_int_tab(int **tab, int height);
+double	lerp(double a, double b, double t);
+int		linear_altitude_color(int altitude, int min_alt, int max_alt);
+void	set_pixel(char *data, int x, int y, int current_z);
+int		max(int a, int b);
+void	compute_height_factor(t_fdf *fdf);
+void	draw_line(t_point a, t_point b, char *img_data);
+char	*ft_dtoa(double n, int precision);
+void	draw_map(void);
+int		on_close(void);
+int		key_hook(int keycode);
+void	draw_line_c(t_point a, t_point b, int color);
+void	get_gyro_point(t_gyro *g, int *px, int *py);
+void	draw_colored_line(t_fdf *fdf, int *curr, int *v, char axis);
+void	draw_gyroscope_sphere(t_fdf *fdf);
 
 #endif
