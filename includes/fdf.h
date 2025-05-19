@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 14:04:24 by macauchy          #+#    #+#             */
-/*   Updated: 2025/05/19 15:06:26 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/05/19 16:51:02 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,6 +164,29 @@ typedef struct s_bresenham
 	int	sy;
 	int	err;
 }				t_bresenham;
+
+typedef struct s_line_step
+{
+	int		dx;
+	int		dy;
+	int		sx;
+	int		sy;
+	int		err;
+	double	total_dist;
+	t_point	a;
+	t_point	b;
+	t_point	start;
+}	t_line_step;
+
+typedef struct s_line_params
+{
+	t_point a;
+	t_point start;
+	t_point b;
+	double t_param;
+	double current_z;
+	double total_dist;
+}	t_line_params;
 
 t_fdf	*_fdf(void);
 int		max(int a, int b);

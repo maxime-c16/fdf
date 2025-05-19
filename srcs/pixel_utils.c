@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pixel_utils.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/19 16:35:51 by macauchy          #+#    #+#             */
+/*   Updated: 2025/05/19 16:38:06 by macauchy         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/fdf.h"
 
 void	set_pixel(char *data, int x, int y, int current_z)
@@ -25,9 +37,9 @@ int	max(int a, int b)
 	return (b);
 }
 
-void compute_height_factor(t_fdf *fdf)
+void	compute_height_factor(t_fdf *fdf)
 {
-	int i;
+	int	i;
 	int	j;
 
 	i = 0;
@@ -47,5 +59,5 @@ void compute_height_factor(t_fdf *fdf)
 		i++;
 	}
 	fdf->camera.height_factor = ((double)fdf->camera.zoom
-	/ max(1, fdf->max_altitude - fdf->min_altitude)) * 2.0;
+			/ max(1, fdf->max_altitude - fdf->min_altitude)) * 2.0;
 }

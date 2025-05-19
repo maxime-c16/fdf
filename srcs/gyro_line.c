@@ -1,20 +1,29 @@
-#include "../includes/fdf.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   gyro_line.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/19 16:29:48 by macauchy          #+#    #+#             */
+/*   Updated: 2025/05/19 16:35:33 by macauchy         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-typedef struct s_line_params
-{
-	t_point a;
-	t_point start;
-	t_point b;
-	double t_param;
-	double current_z;
-}	t_line_params;
+#include "../includes/fdf.h"
 
 static void	init_bresenham(t_point a, t_point b, t_bresenham *bsh)
 {
 	bsh->dx = abs(b.x - a.x);
 	bsh->dy = abs(b.y - a.y);
-	bsh->sx = (a.x < b.x) ? 1 : -1;
-	bsh->sy = (a.y < b.y) ? 1 : -1;
+	if (a.x < b.x)
+		bsh->sx = 1;
+	else
+		bsh->sx = -1;
+	if (a.y < b.y)
+		bsh->sy = 1;
+	else
+		bsh->sy = -1;
 	if (bsh->dx > bsh->dy)
 		bsh->err = bsh->dx / 2;
 	else
@@ -23,7 +32,7 @@ static void	init_bresenham(t_point a, t_point b, t_bresenham *bsh)
 
 static void	step_pixel(t_bresenham *bsh, t_point *a)
 {
-	int e2;
+	int	e2;
 
 	e2 = bsh->err;
 	if (e2 > -bsh->dx)
@@ -44,7 +53,8 @@ static void	compute_line_params(t_line_params *lp)
 	double	curr_dist;
 
 	total_dist = sqrt(pow(lp->b.x - lp->a.x, 2) + pow(lp->b.y - lp->a.y, 2));
-	curr_dist = sqrt(pow(lp->a.x - lp->start.x, 2) + pow(lp->a.y - lp->start.y, 2));
+	curr_dist = sqrt(pow(lp->a.x - lp->start.x, 2) + \
+		pow(lp->a.y - lp->start.y, 2));
 	if (total_dist == 0)
 		lp->t_param = 0;
 	else
