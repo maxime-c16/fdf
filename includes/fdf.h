@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 14:04:24 by macauchy          #+#    #+#             */
-/*   Updated: 2025/05/15 15:06:50 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/05/19 12:46:15 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,12 @@
 
 # ifdef __linux__
 #  define ESC 65307
-#  define W 119
-#  define A 97
-#  define S 115
-#  define D 100
-#  define E 101
-#  define R 114
+#  define ADD_X_ROTATE 119
+#  define ADD_Y_ROTATE 97
+#  define SUB_X_ROTATE 115
+#  define SUB_Y_ROTATE 100
+#  define SUB_Z_ROTATE 101
+#  define ADD_Z_ROTATE 113
 #  define LEFT 65361
 #  define RIGHT 65363
 
@@ -59,21 +59,11 @@
 # define LEFT_ARROW 65361
 # define RIGHT_ARROW 65363
 
-// # define LEFT_ARROW 123
-// # define RIGHT_ARROW 124
-// # define DOWN_ARROW 125
-// # define UP_ARROW 126
-# define ADD_X_ROTATE 13
-# define SUB_X_ROTATE 1
-# define ADD_Y_ROTATE 0
-# define SUB_Y_ROTATE 2
-# define ADD_Z_ROTATE 14
-# define SUB_Z_ROTATE 12
-# define ADD_ZOOM 69
-# define SUB_ZOOM 78
-# define CH_PROJ 35
+# define ADD_ZOOM 65451
+# define SUB_ZOOM 65453
+# define CH_PROJ 112
 # define ESC 65307
-# define RESET 15
+# define RESET 114
 
 # define PROJ_ISOMETRIC 0
 # define PROJ_PERSPECTIVE 1
@@ -148,6 +138,24 @@ typedef struct s_point
 	int		color_altitude;
 }			t_point;
 
+typedef struct s_line
+{
+	t_point a;
+	t_point b;
+	t_point start;
+	int sx;
+	int sy;
+	int err;
+	double total_dist;
+}			t_line;
+
+typedef struct s_drawmap_ctx
+{
+	t_fdf	*fdf;
+	int		i;
+	int		j;
+}				t_drawmap_ctx;
+
 t_fdf	*_fdf(void);
 int		max(int a, int b);
 void	parsing(char *filename);
@@ -164,5 +172,7 @@ void	apply_z_rotation(double *x, double *y, double psi);
 int		mouse_press(int button, int x, int y);
 int		mouse_release(int x, int y);
 int		mouse_move(int x, int y);
+void	ft_free_tab(char **tab);
+void	ft_free_int_tab(int **tab, int height);
 
 #endif

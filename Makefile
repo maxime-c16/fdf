@@ -6,16 +6,16 @@
 #    By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/18 14:49:38 by macauchy          #+#    #+#              #
-#    Updated: 2025/05/15 15:21:32 by macauchy         ###   ########.fr        #
+#    Updated: 2025/05/16 12:22:15 by macauchy         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-FILES	=	fdf.c singleton.c parsing.c projection.c gyro.c hooks.c
+FILES	=	fdf.c singleton.c parsing.c projection.c gyro.c hooks.c free.c
 SRC_DIR	=	srcs
 SRCS	=	$(addprefix $(SRC_DIR)/, $(FILES))
 OBJ_DIR	=	.objs
 OBJS	=	$(addprefix $(OBJ_DIR)/, $(FILES:.c=.o))
-
+HEADER	=	includes/fdf.h
 NAME	=	fdf
 CC		=	gcc
 CFLAGS	=	-g3
@@ -30,7 +30,7 @@ $(NAME):	make_libs $(OBJS)
 		@$(CC) $(CFLAGS) $(OBJS) $(LDFLAGS) -o $(NAME)
 		@echo "Usage: ./$(NAME) <map>.fdf"
 
-$(OBJ_DIR)/%.o:	$(SRC_DIR)/%.c
+$(OBJ_DIR)/%.o:	$(SRC_DIR)/%.c $(HEADER)
 		@echo "Compiling $<"
 		@mkdir -p $(OBJ_DIR)
 		@$(CC) $(CFLAGS) -c $< -o $@

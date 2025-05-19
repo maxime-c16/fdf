@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 14:48:10 by macauchy          #+#    #+#             */
-/*   Updated: 2025/05/15 14:56:09 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/05/16 14:22:45 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,18 @@ t_fdf	*_fdf(void)
 		fdf.win = mlx_new_window(fdf.mlx, WIDTH, HEIGHT, "fdf");
 		if (!fdf.win)
 		{
+			mlx_destroy_display(fdf.mlx);
 			ft_putstr_fd("Error: mlx_new_window() failed\n", 2);
 			exit(1);
 		}
 		fdf.img = mlx_new_image(fdf.mlx, WIDTH, HEIGHT);
+		if (!fdf.img)
+		{
+			ft_putstr_fd("Error: mlx_new_image() failed\n", 2);
+			mlx_destroy_window(fdf.mlx, fdf.win);
+			mlx_destroy_display(fdf.mlx);
+			exit(1);
+		}
 		fdf.camera.zoom = (WIDTH + HEIGHT) / 40;
 		fdf.camera.x_offset = WIDTH / 2;
 		fdf.camera.y_offset = HEIGHT / 2;

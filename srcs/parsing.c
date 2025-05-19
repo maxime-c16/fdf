@@ -6,11 +6,30 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 11:40:36 by macauchy          #+#    #+#             */
-/*   Updated: 2025/05/15 15:27:53 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/05/16 14:42:04 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/fdf.h"
+
+static void	count_width(char *line)
+{
+	int		width;
+	char	**split;
+
+	width = 0;
+	split = ft_split(line, ' ');
+	if (!split)
+	{
+		free(line);
+		ft_putstr_fd("Error: ft_split() failed\n", 2);
+		exit(1);
+	}
+	while (split[width])
+		width++;
+	ft_free_tab(split);
+	_fdf()->width = width;
+}
 
 static void	print_map(void)
 {
@@ -37,16 +56,31 @@ static void	count_lines(char *filename)
 {
 	int		fd;
 	int		lines;
+	char	*line;
 
 	lines = 0;
+	line = NULL;
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
 	{
 		ft_putstr_fd("Error: open() failed\n", 2);
 		exit(1);
 	}
-	while (get_next_line(fd))
+	line = get_next_line(fd);
+	if (!line)
+	{
+		ft_putstr_fd("Error: get_next_line() failed\n", 2);
+		close(fd);
+		exit(1);
+	}
+	else
+		count_width(line);
+	while (line)
+	{
 		lines++;
+		free(line);
+		line = get_next_line(fd);
+	}
 	close(fd);
 	_fdf()->height = lines;
 }
@@ -82,8 +116,6 @@ static void	read_from_fd(int fd)
 
 	i = 0;
 	line = get_next_line(fd);
-	printf("height: %d\n", _fdf()->height);
-	printf("width: %d\n", _fdf()->width);
 	_fdf()->map = (int **)malloc(sizeof(int *) * _fdf()->height);
 	if (!_fdf()->map)
 	{
