@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 14:04:24 by macauchy          #+#    #+#             */
-/*   Updated: 2025/05/19 16:51:02 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/05/20 15:19:12 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -222,5 +222,20 @@ void	draw_colored_line(t_fdf *fdf, int *curr, int *v, char axis);
 void	draw_gyroscope_sphere(t_fdf *fdf);
 void	count_lines(char *filename);
 void	read_from_fd(int fd);
+void	init_draw_map_ctx(t_drawmap_ctx *ctx, int *i_start, int *i_step);
+void	draw_map_loop(t_drawmap_ctx *ctx, int i_start, int i_step);
+void	draw_gyroscope_sphere(t_fdf *fdf);
+void	draw_map_rows(t_drawmap_ctx *ctx);
+void	handle_arrow_keys(int keycode);
+void	handle_rotation_keys(int keycode);
+void	handle_zoom_key(int keycode);
+void	handle_proj_key(int keycode);
+void	handle_reset_key(int keycode);
+void	apply_y_rotation(double *x, double *z, double theta);
+void	apply_x_rotation(double *y, double *z, double phi);
+void	apply_z_rotation(double *x, double *y, double psi);
+void	apply_proj(t_point *point, double x, double y, double z);
+t_point	project_point(int i, int j);
+t_point	project_point_scaled(int i, int j);
 
 #endif
