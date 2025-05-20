@@ -6,31 +6,28 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:15:23 by macauchy          #+#    #+#             */
-/*   Updated: 2025/05/20 15:20:39 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/05/20 15:45:41 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/fdf.h"
 
-static void	apply_isometric_projection(t_point *point, double x, double y, double z)
-{
-	point->x = (x - y) * cos(M_PI / 6);
-	point->y = (x + y) * sin(M_PI / 6) - z;
-}
-
-static void	apply_perspective_projection(t_point *point, double x, double y, double z)
+static void	apply_perspective_projection(t_point *point, double x, double y, \
+		double z)
 {
 	point->x = x / (1 - z / 1000);
 	point->y = y / (1 - z / 1000);
 }
 
-static void	apply_oblique_projection(t_point *point, double x, double y, double z)
+static void	apply_oblique_projection(t_point *point, double x, double y, \
+		double z)
 {
 	point->x = x + 0.5 * z * cos(M_PI / 6);
 	point->y = y + 0.5 * z * sin(M_PI / 6);
 }
 
-static void	apply_cabinet_projection(t_point *point, double x, double y, double z)
+static void	apply_cabinet_projection(t_point *point, double x, double y, \
+		double z)
 {
 	point->x = 0.5 * x + z * cos(M_PI / 6);
 	point->y = 0.5 * y + z * sin(M_PI / 6);

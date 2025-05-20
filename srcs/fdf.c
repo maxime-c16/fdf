@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 13:54:29 by mcauchy           #+#    #+#             */
-/*   Updated: 2025/05/19 13:36:00 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/05/20 16:01:59 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,14 @@ int	main(int ac, char **av)
 {
 	t_fdf	*fdf;
 
+	fdf = NULL;
 	if (ac != 2)
 	{
 		ft_putstr_fd("Usage: ./fdf <filename>\n", 2);
 		return (1);
 	}
 	if (!open_and_parse(av[1]))
-		return (1);
+	return (1);
 	fdf = _fdf();
 	compute_height_factor(fdf);
 	draw_map();

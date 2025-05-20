@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 14:04:24 by macauchy          #+#    #+#             */
-/*   Updated: 2025/05/20 15:19:12 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/05/20 15:50:04 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,29 +106,29 @@ typedef struct s_gyro
 
 typedef struct s_fdf
 {
-	void	*mlx;
-	void	*win;
-	void	*img;
-	char	*img_data;
-	int		bpp;
-	int		size_line;
-	int		endian;
-	int		width;
-	int		height;
-	int		**map;
-	int		fd;
-	int		frame_count;
-	double	center_x;
-	double	center_y;
-	int		min_altitude;
-	int		max_altitude;
-	int		proj_style;
-	int		mouse_pressed;
-	int		mouse_x;
-	int		mouse_y;
+	void		*mlx;
+	void		*win;
+	void		*img;
+	char		*img_data;
+	int			bpp;
+	int			size_line;
+	int			endian;
+	int			width;
+	int			height;
+	int			**map;
+	int			fd;
+	int			frame_count;
+	double		center_x;
+	double		center_y;
+	int			min_altitude;
+	int			max_altitude;
+	int			proj_style;
+	int			mouse_pressed;
+	int			mouse_x;
+	int			mouse_y;
 	t_camera	camera;
-	t_gyro	gyro;
-}			t_fdf;
+	t_gyro		gyro;
+}				t_fdf;
 
 typedef struct s_point
 {
@@ -140,13 +140,13 @@ typedef struct s_point
 
 typedef struct s_line
 {
-	t_point a;
-	t_point b;
-	t_point start;
-	int sx;
-	int sy;
-	int err;
-	double total_dist;
+	t_point	a;
+	t_point	b;
+	t_point	start;
+	int		sx;
+	int		sy;
+	int		err;
+	double	total_dist;
 }			t_line;
 
 typedef struct s_drawmap_ctx
@@ -180,13 +180,22 @@ typedef struct s_line_step
 
 typedef struct s_line_params
 {
-	t_point a;
-	t_point start;
-	t_point b;
-	double t_param;
-	double current_z;
-	double total_dist;
-}	t_line_params;
+	t_point	a;
+	t_point	start;
+	t_point	b;
+	double	t_param;
+	double	current_z;
+	double	total_dist;
+}			t_line_params;
+
+typedef struct s_proj_vars
+{
+	double	x;
+	double	y;
+	double	z;
+	double	scale;
+	double	cz;
+}	t_proj_vars;
 
 t_fdf	*_fdf(void);
 int		max(int a, int b);
@@ -237,5 +246,7 @@ void	apply_z_rotation(double *x, double *y, double psi);
 void	apply_proj(t_point *point, double x, double y, double z);
 t_point	project_point(int i, int j);
 t_point	project_point_scaled(int i, int j);
+void	apply_isometric_projection(t_point *point, double x, \
+		double y, double z);
 
 #endif

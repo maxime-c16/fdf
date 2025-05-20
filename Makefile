@@ -6,11 +6,11 @@
 #    By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/18 14:49:38 by macauchy          #+#    #+#              #
-#    Updated: 2025/05/20 15:20:03 by macauchy         ###   ########.fr        #
+#    Updated: 2025/05/20 15:51:39 by macauchy         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-FILES	=	fdf.c singleton.c parsing.c hooks.c free.c					\
+FILES	=	fdf.c singleton.c parsing.c hooks.c free.c	projection_iso.c			\
 			color_utils.c draw_map.c event_close.c line_utils.c pixel_utils.c		\
 			gyro_draw.c gyro_line.c gyro_point.c parsing_map.c parsing_utils.c		\
 			parsing_print.c draw_map_utils.c draw_map_lines.c draw_map_str.c		\
@@ -26,7 +26,6 @@ CC		=	gcc
 CFLAGS	=	-g3
 DEBUG	=	-fsanitize=address
 RM		=	/bin/rm -rf
-#LDFLAGS	=	 -Llibft -lft -Lmlx -lmlx -lft_gl -Lft_gl -framework OpenGL -framework AppKit -fsanitize=address
 LDFLAGS	=	-Llibft -lft -Lmlx -lmlx -lX11 -lXext -lm
 
 all:		$(NAME)
@@ -48,18 +47,15 @@ debug:		$(OBJS)
 make_libs:
 		@$(MAKE) -C libft -q || (echo "Compiling libft" && $(MAKE) -C libft -j > /dev/null 2>&1)
 		@$(MAKE) -C mlx -q || (echo "Compiling mlx" && $(MAKE) -C mlx -j > /dev/null 2>&1)
-		@$(MAKE) -C ft_gl -q || (echo "Compiling ft_gl" && $(MAKE) -C ft_gl -j > /dev/null 2>&1)
 
 clean:
 		@echo "Cleaning $(NAME)"
 		@$(MAKE) -C libft clean -j > /dev/null 2>&1
 		@$(MAKE) -C mlx clean -j > /dev/null 2>&1
-		@$(MAKE) -C ft_gl clean -j > /dev/null 2>&1
 		@$(RM) $(OBJ_DIR)
 
 fclean: clean
 		@$(MAKE) -C libft fclean -j > /dev/null 2>&1
-		@$(MAKE) -C ft_gl fclean -j > /dev/null 2>&1
 		@$(RM) $(NAME)
 
 
