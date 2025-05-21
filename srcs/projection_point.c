@@ -37,10 +37,11 @@ t_point	project_point_scaled(int i, int j)
 	t_gyro		gyro;
 	t_point		point;
 	t_proj_vars	vars;
+	t_fdf		*fdf;
 
-	gyro = _fdf()->gyro;
-	vars.scale = (gyro.rad) / max(1, _fdf()->max_altitude - \
-		_fdf()->min_altitude);
+	fdf = _fdf();
+	gyro = fdf->gyro;
+	vars.scale = (gyro.rad) / max(1, fdf->max_altitude - fdf->min_altitude);
 	vars.x = (j - _fdf()->width / 2.0) * vars.scale;
 	vars.y = (i - _fdf()->height / 2.0) * vars.scale;
 	gyro.height_factor = vars.scale / 4.0;

@@ -47,7 +47,7 @@ int	main(int ac, char **av)
 		return (1);
 	}
 	if (!open_and_parse(av[1]))
-	return (1);
+		return (1);
 	fdf = _fdf();
 	compute_height_factor(fdf);
 	draw_map();

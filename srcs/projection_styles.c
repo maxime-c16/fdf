@@ -12,22 +12,22 @@
 
 #include "../includes/fdf.h"
 
-static void	apply_perspective_projection(t_point *point, double x, double y, \
-		double z)
+static void	apply_perspective_projection(t_point *point, double x, double y,\
+			double z)
 {
 	point->x = x / (1 - z / 1000);
 	point->y = y / (1 - z / 1000);
 }
 
-static void	apply_oblique_projection(t_point *point, double x, double y, \
-		double z)
+static void	apply_oblique_projection(t_point *point, double x, double y,\
+			double z)
 {
 	point->x = x + 0.5 * z * cos(M_PI / 6);
 	point->y = y + 0.5 * z * sin(M_PI / 6);
 }
 
-static void	apply_cabinet_projection(t_point *point, double x, double y, \
-		double z)
+static void	apply_cabinet_projection(t_point *point, double x, double y,\
+			double z)
 {
 	point->x = 0.5 * x + z * cos(M_PI / 6);
 	point->y = 0.5 * y + z * sin(M_PI / 6);

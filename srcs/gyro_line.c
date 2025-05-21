@@ -49,16 +49,21 @@ static void	step_pixel(t_bresenham *bsh, t_point *a)
 
 static void	compute_line_params(t_line_params *lp)
 {
-	double	total_dist;
 	double	curr_dist;
+	double	dx;
+	double	dy;
+	double	sx;
+	double	sy;
 
-	total_dist = sqrt(pow(lp->b.x - lp->a.x, 2) + pow(lp->b.y - lp->a.y, 2));
-	curr_dist = sqrt(pow(lp->a.x - lp->start.x, 2) + \
-		pow(lp->a.y - lp->start.y, 2));
-	if (total_dist == 0)
+	dx = lp->b.x - lp->a.x;
+	dy = lp->b.y - lp->a.y;
+	sx = lp->a.x - lp->start.x;
+	sy = lp->a.y - lp->start.y;
+	curr_dist = sqrt(sx * sx + sy * sy);
+	if (sqrt(dx * dx + dy * dy) == 0)
 		lp->t_param = 0;
 	else
-		lp->t_param = curr_dist / total_dist;
+		lp->t_param = curr_dist / sqrt(dx * dx + dy * dy);
 	lp->current_z = lerp(lp->a.z, lp->b.z, lp->t_param);
 }
 

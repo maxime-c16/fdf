@@ -50,11 +50,17 @@ static void	step_pixel(t_bresenham *bsh, t_point *a)
 static void	compute_line_params(t_line_params *lp)
 {
 	double	curr_dist;
+	double	dx_total;
+	double	dy_total;
+	double	dx_curr;
+	double	dy_curr;
 
-	lp->total_dist = sqrt(pow(lp->b.x - lp->a.x, 2) + \
-			pow(lp->b.y - lp->a.y, 2));
-	curr_dist = sqrt(pow(lp->a.x - lp->start.x, 2) + \
-			pow(lp->a.y - lp->start.y, 2));
+	dx_total = lp->b.x - lp->a.x;
+	dy_total = lp->b.y - lp->a.y;
+	dx_curr = lp->a.x - lp->start.x;
+	dy_curr = lp->a.y - lp->start.y;
+	lp->total_dist = sqrt(pow(dx_total, 2) + pow(dy_total, 2));
+	curr_dist = sqrt(pow(dx_curr, 2) + pow(dy_curr, 2));
 	if (lp->total_dist == 0)
 		lp->t_param = 0;
 	else
