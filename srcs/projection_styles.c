@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:15:23 by macauchy          #+#    #+#             */
-/*   Updated: 2025/05/22 12:37:24 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/05/22 15:21:45 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,6 @@ static void	apply_cabinet_projection(t_point *point, double x, double y, \
 {
 	point->x = 0.5 * x + z * cos(M_PI / 6);
 	point->y = 0.5 * y + z * sin(M_PI / 6);
-}
-
-static void	apply_conic_projection(t_point *point, double x, double y, double z)
-{
-	point->x = x * z;
-	point->y = y * z;
 }
 
 void	apply_proj(t_point *point, double x, double y, double z)

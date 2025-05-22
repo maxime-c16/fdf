@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 15:35:05 by macauchy          #+#    #+#             */
-/*   Updated: 2025/05/19 15:35:14 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/05/22 15:08:43 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,13 @@ void	parsing(char *filename)
 		ft_putstr_fd("Error: open() failed\n", 2);
 		exit(1);
 	}
-	read_from_fd(fdf->fd);
+	if (!read_from_fd(fdf->fd))
+	{
+		ft_putstr_fd("Error: Invalid map data\n", 2);
+		close(fdf->fd);
+		on_close();
+		exit(1);
+	}
 	close(fdf->fd);
 	fdf->camera.zoom = HEIGHT / max(1, fdf->width);
 	fdf->center_x = ((fdf->width - 1) * fdf->camera.zoom) / 2.0;

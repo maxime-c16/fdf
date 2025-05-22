@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:17:11 by macauchy          #+#    #+#             */
-/*   Updated: 2025/05/22 12:17:08 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/05/22 15:16:15 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@ t_point	project_point(int i, int j)
 	t_proj_vars	vars;
 
 	fdf = _fdf();
-	vars.x = j * fdf->camera.zoom - fdf->center_x;
-	vars.y = i * fdf->camera.zoom - fdf->center_y;
+	vars.x = (j - fdf->width / 2.0) * fdf->camera.zoom;
+	vars.y = (i - fdf->height / 2.0) * fdf->camera.zoom;
 	vars.z = fdf->map[i][j] * fdf->camera.height_factor;
 	apply_y_rotation(&vars.x, &vars.z, fdf->camera.rotation_y);
 	apply_x_rotation(&vars.y, &vars.z, fdf->camera.rotation_x);

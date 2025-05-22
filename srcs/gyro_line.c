@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 16:29:48 by macauchy          #+#    #+#             */
-/*   Updated: 2025/05/19 16:35:33 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/05/22 15:31:32 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,8 @@ void	draw_line_c(t_point a, t_point b, int color)
 	lp.a = a;
 	lp.start = start;
 	lp.b = b;
+	fdf->flag = 1;
+	fdf->color = color;
 	while (1)
 	{
 		compute_line_params(&lp);
@@ -88,4 +90,6 @@ void	draw_line_c(t_point a, t_point b, int color)
 			break ;
 		step_pixel(&bsh, &lp.a);
 	}
+	fdf->flag = 0;
+	fdf->color = 0;
 }

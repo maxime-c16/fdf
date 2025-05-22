@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 14:04:24 by macauchy          #+#    #+#             */
-/*   Updated: 2025/05/22 12:22:32 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/05/22 15:30:43 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@
 # include <math.h>
 # include <limits.h>
 
-# define WIDTH 1820
-# define HEIGHT 980
+# define WIDTH 1120
+# define HEIGHT 780
 
 # define SEG 36
 
@@ -120,6 +120,8 @@ typedef struct s_fdf
 	int			**map;
 	int			fd;
 	int			frame_count;
+	int			flag;
+	int			color;
 	double		center_x;
 	double		center_y;
 	int			min_altitude;
@@ -241,7 +243,7 @@ void	get_gyro_point(t_gyro *g, int *px, int *py);
 void	draw_colored_line(t_fdf *fdf, int *curr, int *v, char axis);
 void	draw_gyroscope_sphere(t_fdf *fdf);
 void	count_lines(char *filename);
-void	read_from_fd(int fd);
+int		read_from_fd(int fd);
 void	init_draw_map_ctx(t_drawmap_ctx *ctx, int *i_start, int *i_step);
 void	draw_map_loop(t_drawmap_ctx *ctx, int i_start, int i_step);
 void	draw_gyroscope_sphere(t_fdf *fdf);

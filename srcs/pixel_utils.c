@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 16:35:51 by macauchy          #+#    #+#             */
-/*   Updated: 2025/05/19 16:38:06 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/05/22 15:35:13 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,11 @@ void	set_pixel(char *data, int x, int y, int current_z)
 	offset = y * WIDTH + x;
 	if (x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT)
 	{
-		color = linear_altitude_color(current_z, fdf->min_altitude,
-				fdf->max_altitude);
+		if (fdf->flag == 1)
+			color = fdf->color;
+		else
+			color = linear_altitude_color(current_z, fdf->min_altitude,
+					fdf->max_altitude);
 		buf[offset] = color;
 	}
 }
