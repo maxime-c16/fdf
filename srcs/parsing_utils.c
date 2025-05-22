@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 15:28:39 by macauchy          #+#    #+#             */
-/*   Updated: 2025/05/22 14:53:22 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/05/22 16:00:40 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,8 @@ void	count_lines(char *filename)
 	{
 		ft_putstr_fd("Error: get_next_line() failed\n", 2);
 		close(fd);
+		on_close();
+		free(line);
 		exit(1);
 	}
 	count_width(line);
