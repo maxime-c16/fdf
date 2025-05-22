@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 14:57:54 by macauchy          #+#    #+#             */
-/*   Updated: 2025/05/22 11:49:35 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/05/22 15:41:51 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static void	draw_colored_line_helper(t_point a, t_point b, char axis)
 		draw_line_c(a, b, 0x0000FF);
 }
 
-void	draw_colored_line(t_fdf *fdf, int *curr, int *v, char axis)
+void	draw_colored_line(int *curr, int *v, char axis)
 {
 	t_point	a;
 	t_point	b;
@@ -41,7 +41,7 @@ static void	draw_circle_step(t_fdf *fdf, int i, int *curr, int *v)
 	fdf->gyro.angle = (2.0 * M_PI * i) / SEG;
 	get_gyro_point(&fdf->gyro, &curr[0], &curr[1]);
 	if (i > 0)
-		draw_colored_line(fdf, curr, v, fdf->gyro.axis);
+		draw_colored_line(curr, v, fdf->gyro.axis);
 	v[0] = curr[0];
 	v[1] = curr[1];
 }

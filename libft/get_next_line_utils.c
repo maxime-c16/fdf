@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 16:00:24 by mcauchy           #+#    #+#             */
-/*   Updated: 2025/03/19 11:55:57 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/05/22 15:49:40 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ char	*ft_strjoin_gnl(char *s1, char *s2)
 
 	if (!s1)
 		return (ft_strdup(s2));
-	str = (char *)malloc(sizeof(char) * (ft_strlen((const char *)s1)\
+	str = (char *)malloc(sizeof(char) * (ft_strlen((const char *)s1) \
 		+ ft_strlen((const char *)s2) + 1));
 	if (!str)
 		return (NULL);

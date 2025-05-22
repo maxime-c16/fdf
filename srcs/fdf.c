@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 13:54:29 by mcauchy           #+#    #+#             */
-/*   Updated: 2025/05/22 12:35:26 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/05/22 15:47:53 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int	main(int ac, char **av)
 	fdf = NULL;
 	if (ac != 2)
 	{
-		ft_putstr_fd("Usage: ./fdf <filename>\n", 2);
+		ft_putstr_fd("Usage: ./fdf <map>.fdf\n", 2);
 		return (1);
 	}
 	if (!open_and_parse(av[1]))

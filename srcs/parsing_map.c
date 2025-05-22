@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 15:28:49 by macauchy          #+#    #+#             */
-/*   Updated: 2025/05/22 15:11:35 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/05/22 15:42:18 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static void	insert_values(char *line, int i)
 	free(split);
 }
 
-int	check_size(char *line, int i)
+int	check_size(char *line)
 {
 	int		width;
 	char	**split;
@@ -76,7 +76,7 @@ int	read_from_fd(int fd)
 			ft_putstr_fd("Error: malloc() failed\n", 2);
 			exit(1);
 		}
-		flag = check_size(line, i);
+		flag = check_size(line);
 		insert_values(line, i);
 		i++;
 		free(line);
