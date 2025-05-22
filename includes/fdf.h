@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 14:04:24 by macauchy          #+#    #+#             */
-/*   Updated: 2025/05/20 15:50:04 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/05/22 12:22:32 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@
 # include <math.h>
 # include <limits.h>
 
-# define WIDTH 800
-# define HEIGHT 600
+# define WIDTH 1820
+# define HEIGHT 980
 
 # define SEG 36
 
@@ -79,6 +79,8 @@
 # define ON_MOUSEMOVE 6
 # define ON_EXPOSE 12
 # define ON_DESTROY 17
+
+# define MAX_SCALE 10.0
 
 typedef struct s_camera
 {
@@ -196,6 +198,15 @@ typedef struct s_proj_vars
 	double	scale;
 	double	cz;
 }	t_proj_vars;
+
+typedef struct s_scale_ctx
+{
+	double	scale;
+	double	x;
+	double	y;
+	double	z;
+	double	cz;
+}	t_scale_ctx;
 
 t_fdf	*_fdf(void);
 int		max(int a, int b);

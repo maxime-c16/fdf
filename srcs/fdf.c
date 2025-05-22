@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 13:54:29 by mcauchy           #+#    #+#             */
-/*   Updated: 2025/05/20 16:01:59 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/05/22 12:35:26 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,9 @@ static void	setup_hooks(t_fdf *fdf)
 {
 	mlx_hook(fdf->win, 17, 0, on_close, 0);
 	mlx_hook(fdf->win, ON_KEYDOWN, 1L << 0, key_hook, 0);
-	mlx_hook(fdf->win, 4, 1L << 0, mouse_press, 0);
-	mlx_hook(fdf->win, 5, 0, mouse_release, 0);
-	mlx_hook(fdf->win, 6, 0, mouse_move, 0);
+	mlx_hook(fdf->win, 4, 1L << 2, mouse_press, 0);
+	mlx_hook(fdf->win, 5, 1L << 3, mouse_release, 0);
+	mlx_hook(fdf->win, 6, 1L << 6, mouse_move, 0);
 }
 
 int	main(int ac, char **av)

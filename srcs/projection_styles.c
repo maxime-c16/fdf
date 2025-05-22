@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 15:15:23 by macauchy          #+#    #+#             */
-/*   Updated: 2025/05/22 11:25:41 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/05/22 12:37:24 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	apply_proj(t_point *point, double x, double y, double z)
 	else if (fdf->proj_style == PROJ_CABINET)
 		apply_cabinet_projection(point, x, y, z);
 	else if (fdf->proj_style == PROJ_CONIC)
-		apply_conic_projection(point, x, y, z);
+		apply_perspective_projection(point, x, y, z);
 	else
 	{
 		point->x = x;
