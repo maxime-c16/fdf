@@ -6,33 +6,28 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 15:28:49 by macauchy          #+#    #+#             */
-/*   Updated: 2025/05/23 12:51:33 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/05/23 14:09:26 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/fdf.h"
-
-// static int	check_range(long value)
-// {
-// 	if (value > INT_MAX || value < INT_MIN)
-// 		return (0);
-// 	return (1);
-// }
 
 int	check_size(char *line)
 {
 	int		width;
 	char	**split;
 
+	width = 0;
 	split = ft_split(line, ' ');
 	if (!split)
 	{
 		ft_putstr_fd("Error: ft_split() failed\n", 2);
 		exit(1);
 	}
-	width = 0;
 	while (split[width])
+	{
 		width++;
+	}
 	ft_free_tab(split);
 	if (width != _fdf()->width)
 		return (0);

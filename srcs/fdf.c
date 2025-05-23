@@ -6,11 +6,26 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 13:54:29 by mcauchy           #+#    #+#             */
-/*   Updated: 2025/05/22 15:47:53 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/05/23 15:21:37 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/fdf.h"
+
+int	str_is_numeric(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (!ft_isdigit(str[i]) && str[i] != ' ' && str[i] != '-' \
+				&& str[i] != '\n')
+			return (0);
+		i++;
+	}
+	return (1);
+}
 
 static int	open_and_parse(char *filename)
 {
@@ -25,6 +40,32 @@ static int	open_and_parse(char *filename)
 	close(fd);
 	parsing(filename);
 	return (1);
+}
+
+static int	check_map_format(char *filename)
+{
+	int		fd;
+	char	*line;
+	int		flag;
+
+	flag = 0;
+	fd = open(filename, O_RDONLY);
+	if (fd < 0)
+	{
+		ft_putstr_fd("Error: Could not open file\n", 2);
+		return (0);
+	}
+	line = get_next_line(fd);
+	while (line)
+	{
+		if (!str_is_numeric(line))
+			flag = 1;
+		free(line);
+		line = get_next_line(fd);
+	}
+	free(line);
+	close(fd);
+	return (flag == 0);
 }
 
 static void	setup_hooks(t_fdf *fdf)
@@ -46,6 +87,8 @@ int	main(int ac, char **av)
 		ft_putstr_fd("Usage: ./fdf <map>.fdf\n", 2);
 		return (1);
 	}
+	if (!check_map_format(av[1]))
+		return (1);
 	if (!open_and_parse(av[1]))
 		return (1);
 	fdf = _fdf();
