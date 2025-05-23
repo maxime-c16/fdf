@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mcauchy <mcauchy@student.42.fr>            +#+  +:+       +#+        */
+/*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/07 12:54:51 by maximecauch       #+#    #+#             */
-/*   Updated: 2025/02/09 18:59:32 by mcauchy          ###   ########.fr       */
+/*   Updated: 2025/05/23 12:24:08 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	ft_atoi(const char *str)
+long	ft_atoi(const char *str)
 {
 	long long	result;
 	int			sign;
@@ -32,9 +32,9 @@ int	ft_atoi(const char *str)
 	while (ft_isdigit(*str) && *str)
 	{
 		if (result > 2147483647 && sign > 0)
-			return (-1);
+			return (FLAG_OVERFLOW);
 		if (result >= 2147483648 && sign < 0)
-			return (0);
+			return (FLAG_UNDERFLOW);
 		result = result * 10 + (*str - '0');
 		str++;
 	}

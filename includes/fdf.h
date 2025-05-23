@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 14:04:24 by macauchy          #+#    #+#             */
-/*   Updated: 2025/05/22 15:42:03 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/05/23 13:12:59 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,11 @@
 #  define SUB_Y_ROTATE 100
 #  define SUB_Z_ROTATE 101
 #  define ADD_Z_ROTATE 113
+#  define ADD_SCALE 61
+#  define SUB_SCALE 45
 #  define LEFT 65361
 #  define RIGHT 65363
+#  define M_KEY 109
 
 # elif __APPLE__
 #  define KEY_ESC 53
@@ -124,6 +127,8 @@ typedef struct s_fdf
 	int			color;
 	double		center_x;
 	double		center_y;
+	double		scale;
+	int			snap;
 	int			min_altitude;
 	int			max_altitude;
 	int			proj_style;
@@ -236,6 +241,7 @@ void	compute_height_factor(t_fdf *fdf);
 void	draw_line(t_point a, t_point b, char *img_data);
 char	*ft_dtoa(double n, int precision);
 void	draw_map(void);
+void	print_map(void);
 int		on_close(void);
 int		key_hook(int keycode);
 void	draw_line_c(t_point a, t_point b, int color);
@@ -249,7 +255,7 @@ void	draw_map_loop(t_drawmap_ctx *ctx, int i_start, int i_step);
 void	draw_gyroscope_sphere(t_fdf *fdf);
 void	draw_map_rows(t_drawmap_ctx *ctx);
 void	handle_arrow_keys(int keycode);
-void	handle_rotation_keys(int keycode);
+void	handle_rotation_keys(int keycode, t_fdf *fdf);
 void	handle_zoom_key(int keycode);
 void	handle_proj_key(int keycode);
 void	handle_reset_key(int keycode);

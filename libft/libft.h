@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 12:45:04 by mcauchy           #+#    #+#             */
-/*   Updated: 2025/03/20 14:07:13 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/05/23 12:24:21 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,9 @@
 #  define BUFFER_SIZE 32
 # endif
 
+# define FLAG_OVERFLOW 2147483648
+# define FLAG_UNDERFLOW -2147483649
+
 typedef struct s_list
 {
 	void			*content;
@@ -36,7 +39,7 @@ int		ft_strncmp(const char *s1, const char *s2, size_t n);
 int		ft_strcmp(char *s1, char *s2);
 int		ft_memcmp(const void *s1, const void *s2, int n);
 int		ft_strlen(const char *str);
-int		ft_atoi(const char *str);
+long	ft_atoi(const char *str);
 int		ft_isalpha(int c);
 int		ft_isalnum(int c);
 int		ft_isprint(int c);

@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 16:35:51 by macauchy          #+#    #+#             */
-/*   Updated: 2025/05/22 15:35:13 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/05/23 13:00:01 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,11 @@ int	max(int a, int b)
 
 void	compute_height_factor(t_fdf *fdf)
 {
-	int	i;
-	int	j;
+	int		i;
+	int		j;
 
 	i = 0;
+	fdf->scale = 2.0;
 	fdf->min_altitude = INT_MAX;
 	fdf->max_altitude = INT_MIN;
 	while (i < fdf->height)
@@ -62,5 +63,5 @@ void	compute_height_factor(t_fdf *fdf)
 		i++;
 	}
 	fdf->camera.height_factor = ((double)fdf->camera.zoom
-			/ max(1, fdf->max_altitude - fdf->min_altitude)) * 2.0;
+			/ max(1, fdf->max_altitude - fdf->min_altitude)) * fdf->scale;
 }

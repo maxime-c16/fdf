@@ -6,7 +6,7 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 10:54:55 by macauchy          #+#    #+#             */
-/*   Updated: 2025/03/24 11:29:14 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/05/23 13:14:29 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ static double	snap(double angle, double step, double threshold)
 {
 	double	nearest;
 
+	if (!_fdf()->snap)
+		return (angle);
 	nearest = round(angle / step) * step;
 	if (fabs(angle - nearest) < threshold)
 		return (nearest);
