@@ -6,11 +6,20 @@
 /*   By: macauchy <macauchy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 12:46:02 by macauchy          #+#    #+#             */
-/*   Updated: 2025/05/20 15:06:04 by macauchy         ###   ########.fr       */
+/*   Updated: 2025/05/23 12:00:07 by macauchy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/fdf.h"
+
+int	is_visible(t_point a, t_point b)
+{
+	if ((a.x < 0 && b.x < 0) || (a.x >= WIDTH && b.x >= WIDTH))
+		return (0);
+	if ((a.y < 0 && b.y < 0) || (a.y >= HEIGHT && b.y >= HEIGHT))
+		return (0);
+	return (1);
+}
 
 void	draw_map_lines(t_drawmap_ctx *ctx, int i, int j)
 {
@@ -25,14 +34,16 @@ void	draw_map_lines(t_drawmap_ctx *ctx, int i, int j)
 	{
 		b = project_point(i, j + 1);
 		gyro_b = project_point_scaled(i, j + 1);
-		draw_line(a, b, ctx->fdf->img_data);
+		if (is_visible(a, b))
+			draw_line(a, b, ctx->fdf->img_data);
 		draw_line(gyro_a, gyro_b, ctx->fdf->img_data);
 	}
 	if (i + 1 < ctx->fdf->height)
 	{
 		b = project_point(i + 1, j);
 		gyro_b = project_point_scaled(i + 1, j);
-		draw_line(a, b, ctx->fdf->img_data);
+		if (is_visible(a, b))
+			draw_line(a, b, ctx->fdf->img_data);
 		draw_line(gyro_a, gyro_b, ctx->fdf->img_data);
 	}
 }
